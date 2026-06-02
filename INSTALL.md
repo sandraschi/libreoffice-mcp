@@ -71,7 +71,7 @@ Set-Location native
 .\build.ps1
 ```
 
-Installer: `native\target\release\bundle\nsis\LibreOffice MCP_0.2.0_x64-setup.exe`
+Installer: `native\target\release\bundle\nsis\LibreOffice MCP_0.3.0-alpha.1_x64-setup.exe` (or download from [GitHub Releases](https://github.com/sandraschi/libreoffice-mcp/releases))
 
 ### Option E — Live Writer bridge extension (.oxt)
 

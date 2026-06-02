@@ -79,8 +79,8 @@ install-oxt:
 pack mcpb-pack:
     Set-Location "{{REPO}}"
     New-Item -ItemType Directory -Force -Path dist | Out-Null
-    npx --yes @anthropic-ai/mcpb pack "{{REPO}}" "{{REPO}}/dist/libreoffice-mcp-v0.2.0.mcpb"
-    Write-Host "Bundle: {{REPO}}/dist/libreoffice-mcp-v0.2.0.mcpb"
+    npx --yes @anthropic-ai/mcpb pack "{{REPO}}" "{{REPO}}/dist/libreoffice-mcp-v0.3.0-alpha.1.mcpb"
+    Write-Host "Bundle: {{REPO}}/dist/libreoffice-mcp-v0.3.0-alpha.1.mcpb"
 
 # ── Native (Tauri 2.0) ────────────────────────────────────────────────────────
 

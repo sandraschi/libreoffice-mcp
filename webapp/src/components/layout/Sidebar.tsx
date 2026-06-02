@@ -80,7 +80,7 @@ export function Sidebar() {
         </span>
         {sidebarOpen && (
           <span className="ml-2 text-xs text-ink-500 font-mono whitespace-nowrap">
-            v0.2
+            v0.3 α
           </span>
         )}
       </div>
