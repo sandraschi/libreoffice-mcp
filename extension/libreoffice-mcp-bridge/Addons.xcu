@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oor:component-data xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" oor:name="Addons" oor:package="org.openoffice.Office">
+  <node oor:name="AddonUI">
+    <node oor:name="OfficeMenuBar">
+      <node oor:name="com.libreoffice.mcp.bridge.menubar" oor:op="fuse">
+        <prop oor:name="URL">
+          <value>private:resource/menubar/menubar</value>
+        </prop>
+        <node oor:name="Menu">
+          <node oor:name="MCPBridgeMenu" oor:op="replace">
+            <prop oor:name="Title">
+              <value xml:lang="en">MCP Bridge</value>
+            </prop>
+            <node oor:name="StartBridge" oor:op="replace">
+              <prop oor:name="Title">
+                <value xml:lang="en">Start live bridge</value>
+              </prop>
+              <prop oor:name="URL">
+                <value>service:com.libreoffice.mcp.bridge.StartupJob?StartBridge</value>
+              </prop>
+            </node>
+            <node oor:name="StopBridge" oor:op="replace">
+              <prop oor:name="Title">
+                <value xml:lang="en">Stop live bridge</value>
+              </prop>
+              <prop oor:name="URL">
+                <value>service:com.libreoffice.mcp.bridge.StartupJob?StopBridge</value>
+              </prop>
+            </node>
+            <node oor:name="BridgeStatus" oor:op="replace">
+              <prop oor:name="Title">
+                <value xml:lang="en">Bridge status</value>
+              </prop>
+              <prop oor:name="URL">
+                <value>service:com.libreoffice.mcp.bridge.StartupJob?BridgeStatus</value>
+              </prop>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+</oor:component-data>

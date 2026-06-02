@@ -1,0 +1,93 @@
+# libreoffice-mcp — Full LLM Reference
+
+## Architecture
+
+FastMCP 3.3 MCP server (stdio + HTTP `/mcp`) + FastAPI REST backend + Vite/React SOTA webapp.
+
+## MCP tools
+
+- libreoffice(operation, …) — portmanteau (see below)
+- libreoffice_help(topic?) — help index
+- libreoffice_agentic_workflow(goal, ctx) — SEP-1577 sampling workflow
+- show_libreoffice_status_card — Prefab UI
+- show_templates_card — Prefab UI
+
+## Prompts
+
+libreoffice_quick_start, libreoffice_coworker_pdf, libreoffice_convert_playbook
+
+## Skills
+
+skill://libreoffice-expert/SKILL.md, skill://coworker-pdf/SKILL.md
+
+## Tool: libreoffice(operation, …)
+
+Operations:
+- status — soffice path + extension bridge health
+- convert — headless convert; .md → HTML → PDF; optional queue_job
+- merge — ODT template {{PLACEHOLDER}} → pdf/odt
+- list_templates — bundled + custom templates
+- batch_pack — multiple .md → single PDF
+- bridge_discover — list tools on extension MCP :8765
+- bridge_call — proxy to live Writer/Calc extension
+- help — capabilities + REST routes
+
+## REST API
+
+GET  /health
+GET  /api/capabilities
+GET  /api/logs
+GET  /api/fleet/apps
+GET  /api/env
+POST /api/env
+GET  /api/llm/discover
+POST /api/test-llm
+GET  /api/tools
+GET  /api/help
+GET  /api/status
+GET  /api/templates
+GET  /api/jobs
+GET  /api/jobs/{id}
+POST /api/convert
+POST /api/merge
+POST /api/pack
+GET  /api/output
+GET  /api/output/file/{filename}
+GET  /api/skills
+GET  /api/skills/{id}
+GET  /api/actions
+POST /api/actions/run
+GET  /api/workflows
+POST /api/workflows/run
+POST /api/agentic
+
+## Bundled templates
+
+fleet-report.odt → coworker_weekly_report_pdf
+fleet-board-pack.odt → coworker_board_pack
+fleet-artifact-pack.odt → coworker_artifact_pack
+
+## Environment
+
+LIBREOFFICE_MCP_SOFFICE_PATH
+LIBREOFFICE_MCP_EXTENSION_BRIDGE_URL (default http://127.0.0.1:8765/mcp)
+LIBREOFFICE_MCP_TEMPLATES_DIR
+LIBREOFFICE_MCP_OUTPUT_DIR
+LIBREOFFICE_MCP_CENTRAL_DOCS_PATH — Apps Hub registry
+LIBREOFFICE_MCP_OLLAMA_BASE_URL
+LIBREOFFICE_MCP_OLLAMA_MODEL
+LIBREOFFICE_MCP_LMSTUDIO_BASE_URL
+LIBREOFFICE_MCP_OPENAI_API_KEY
+LIBREOFFICE_MCP_OPENAI_MODEL
+LIBREOFFICE_MCP_SAMPLING_BASE_URL (default http://127.0.0.1:11434/v1)
+LIBREOFFICE_MCP_SAMPLING_MODEL
+LIBREOFFICE_MCP_SAMPLING_USE_CLIENT_LLM
+LIBREOFFICE_MCP_PREFAB_APPS
+
+## Ports
+
+Backend 10981 | Frontend 10983 | Extension bridge 8765
+
+## Host
+
+LibreOffice 26.2.3.2+ recommended on Windows (soffice.exe).

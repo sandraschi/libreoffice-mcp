@@ -1,0 +1,5 @@
+LibreOffice MCP Live Bridge — auto-starts on LibreOffice launch and connects Writer to libreoffice-mcp on port 10981.
+
+Enables live typewriter writing, insert_text, new_document, and UNO Basic/Python macro execution from MCP agents.
+
+Requires libreoffice-mcp backend running (just webapp or native app). Configure port via LIBREOFFICE_MCP_PORT in the extension if needed.

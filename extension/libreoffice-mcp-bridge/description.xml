@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<description xmlns="http://openoffice.org/extensions/description/2006">
+  <identifier value="com.libreoffice.mcp.bridge"/>
+  <version value="0.3.0"/>
+  <display-name>
+    <name lang="en">LibreOffice MCP Live Bridge</name>
+  </display-name>
+  <publisher>
+    <name lang="en">sandraschi</name>
+  </publisher>
+  <dependencies>
+    <OpenOffice.org-minimal-version value="7.4" d:name="LibreOffice 7.4+"/>
+  </dependencies>
+</description>

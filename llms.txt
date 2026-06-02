@@ -1,0 +1,25 @@
+# libreoffice-mcp
+
+Headless LibreOffice convert + ODT template merge + extension MCP bridge (FastMCP 3.3).
+
+## Tools
+
+- libreoffice — portmanteau: status, convert, merge, list_templates, batch_pack, bridge_discover, bridge_call, help
+- libreoffice_help — topic help (convert, merge, coworker, bridge, agentic)
+- libreoffice_agentic_workflow — sampling-based multi-step goals (SEP-1577)
+- show_libreoffice_status_card — Prefab status UI
+- show_templates_card — Prefab template gallery
+
+## Skills
+
+skill://libreoffice-expert/SKILL.md, skill://coworker-pdf/SKILL.md
+
+## Prompts
+
+libreoffice_quick_start, libreoffice_coworker_pdf, libreoffice_convert_playbook
+
+## Config
+
+LIBREOFFICE_MCP_SOFFICE_PATH, LIBREOFFICE_MCP_EXTENSION_BRIDGE_URL, LIBREOFFICE_MCP_SAMPLING_BASE_URL, LIBREOFFICE_MCP_SAMPLING_MODEL
+
+Backend: 10981 | Frontend: 10983 | MCP: http://localhost:10981/mcp

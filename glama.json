@@ -1,0 +1,10 @@
+{
+  "name": "libreoffice-mcp",
+  "description": "Fleet LibreOffice MCP — headless convert, ODT template merge, batch artifact packs, and extension MCP bridge. SOTA Vite dashboard on :10983.",
+  "author": "sandraschi",
+  "license": "MIT",
+  "homepage": "https://github.com/sandraschi/libreoffice-mcp",
+  "repository": "https://github.com/sandraschi/libreoffice-mcp",
+  "tags": ["libreoffice", "pdf", "convert", "odt", "documents", "mcp", "headless"],
+  "category": "productivity"
+}

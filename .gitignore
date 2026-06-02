@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+dist/
+build/
+native/target/
+native/binaries/
+*.egg-info/
+uv.lock
+.env
+node_modules/
+webapp/dist/
+webapp/test-results/
+webapp/tsconfig.tsbuildinfo
