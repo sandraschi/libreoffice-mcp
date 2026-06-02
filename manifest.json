@@ -1,7 +1,7 @@
 {
   "manifest_version": "0.2",
   "name": "libreoffice-mcp",
-  "version": "0.2.0",
+  "version": "0.3.0-alpha.1",
   "description": "General-purpose LibreOffice MCP — Writer/Calc/Impress convert, merge, batch, PDF merge, folder watch, upload, agentic workflows",
   "author": {
     "name": "sandraschi"
