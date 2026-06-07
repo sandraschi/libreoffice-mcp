@@ -27,5 +27,8 @@ if (-not (Test-Path -LiteralPath $FleetStartPath)) {
 . $FleetStartPath
 Stop-FleetPortSquatters -Ports @(10981, 10983) -Label "libreoffice-mcp"
 
+if (-not (Assert-FleetPortsAvailable -Ports @(10981, 10983) -Label "libreoffice-mcp")) { exit 1 }
+
 & (Join-Path $PSScriptRoot "webapp\start.ps1") @PSBoundParameters
+
 
