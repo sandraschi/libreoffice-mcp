@@ -5,6 +5,7 @@
     [switch]$NoBrowser
 )
 
+$ProjectRoot = Split-Path -Parent $PSScriptRoot
 $FleetStartPath = Join-Path $ProjectRoot "scripts\FleetStartMode.ps1"
 if (-not (Test-Path -LiteralPath $FleetStartPath)) {
     Write-Host "ERROR: Missing vendored launcher helper: $FleetStartPath" -ForegroundColor Red
@@ -17,7 +18,6 @@ Enter-FleetHeadlessConsole -Headless:$Headless -BackendOnly:$BackendOnly
 $ErrorActionPreference = "Stop"
 $WebPort = 10983
 $BackendPort = 10981
-$ProjectRoot = Split-Path -Parent $PSScriptRoot
 $Soffice = "C:\Program Files\LibreOffice\program\soffice.exe"
 
 Write-Host "=== libreoffice-mcp (FastMCP 3.2 + Vite dashboard) ===" -ForegroundColor Cyan
