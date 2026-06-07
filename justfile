@@ -1,8 +1,8 @@
-set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
+﻿set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
 
 # Open interactive recipe dashboard (fleet standard)
 default:
-    @pwsh.exe -NoProfile -ExecutionPolicy Bypass -File ../mcp-central-docs/scripts/just-dashboard.ps1 -Path .
+    @just --list
 
 REPO := justfile_directory()
 
@@ -73,8 +73,14 @@ e2e:
 pack-oxt:
     pwsh -NoLogo -File "{{REPO}}/scripts/pack-bridge-oxt.ps1"
 
+pack-calc-oxt:
+    pwsh -NoLogo -File "{{REPO}}/scripts/pack-bridge-calc-oxt.ps1"
+
 install-oxt:
     pwsh -NoLogo -File "{{REPO}}/scripts/install-bridge-oxt.ps1"
+
+install-calc-oxt:
+    pwsh -NoLogo -File "{{REPO}}/scripts/install-bridge-calc-oxt.ps1"
 
 pack mcpb-pack:
     Set-Location "{{REPO}}"
@@ -108,3 +114,4 @@ tauri-dev:
     $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
     npm install
     npx @tauri-apps/cli dev
+

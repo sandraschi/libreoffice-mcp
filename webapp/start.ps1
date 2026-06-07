@@ -1,11 +1,16 @@
-param(
+﻿param(
     [switch]$Headless,
     [switch]$BackendOnly,
     [switch]$FrontendOnly,
     [switch]$NoBrowser
 )
 
-. "D:/Dev/repos/mcp-central-docs/standards/FleetStartMode.ps1"
+$FleetStartPath = Join-Path $ProjectRoot "scripts\FleetStartMode.ps1"
+if (-not (Test-Path -LiteralPath $FleetStartPath)) {
+    Write-Host "ERROR: Missing vendored launcher helper: $FleetStartPath" -ForegroundColor Red
+    exit 1
+}
+. $FleetStartPath
 $FleetStart = Initialize-FleetStartMode @PSBoundParameters
 Enter-FleetHeadlessConsole -Headless:$Headless -BackendOnly:$BackendOnly
 
@@ -51,8 +56,7 @@ if ($FleetStart.RunBackend) {
     uv sync --quiet --project $ProjectRoot | Out-Null
 
     $backendCmd = "Set-Location '$ProjectRoot'; uv run libreoffice-mcp --http --port $BackendPort"
-    $backendProc = Start-Process powershell -ArgumentList "-NoExit", "-Command", $backendCmd `
-        -WorkingDirectory $ProjectRoot -PassThru -WindowStyle $(if ($Headless) { "Hidden" } else { "Normal" })
+    Start-Process powershell -ArgumentList "-NoProfile", "-WindowStyle", "Normal", "-Command", $backendCmd
 
     Write-Host "Waiting for backend /health on :$BackendPort ..." -ForegroundColor Cyan
     $ready = $false
@@ -76,11 +80,7 @@ if ($FleetStart.RunBackend) {
 }
 
 if (-not $FleetStart.RunFrontend) {
-    if ($backendProc) {
-        Write-Host "Backend-only mode. Close the backend window or press Ctrl+C here." -ForegroundColor Gray
-        try { Wait-Process -Id $backendProc.Id } catch {}
-    }
-    return
+    while ($true) { Start-Sleep -Seconds 60 }
 }
 
 Write-Host "Starting Vite frontend on port $WebPort ..." -ForegroundColor Green
@@ -108,4 +108,5 @@ Write-Host "  MCP HTTP  : http://127.0.0.1:$BackendPort/mcp" -ForegroundColor Cy
 Write-Host "  Health    : http://127.0.0.1:$BackendPort/health" -ForegroundColor Cyan
 Write-Host ""
 
-npm run dev -- --port $WebPort --host 127.0.0.1
+npm run dev -- --port $WebPort --host 127.0.0.1 --strictPort
+
