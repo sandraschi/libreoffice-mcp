@@ -52,6 +52,10 @@ Coworker flows still work via `fleet-agent-mcp` → `libreoffice(operation='merg
 
 See [LIVE_WRITER.md](LIVE_WRITER.md). **Not** arbitrary Basic macro files on disk — use `run_macro` / `run_python_macro` with the .oxt bridge, or extension `:8765` for third-party tools.
 
+## Ecosystem
+
+How we compare to **mcp-libre**, **libre-office-mcp**, and **WriterAgent** — and what to reuse: [COMPARISON-OTHER-LO-MCP.md](COMPARISON-OTHER-LO-MCP.md).
+
 ## Limits
 
 - No embedded UNO in the MCP process — live lane uses Writer-side macro or extension bridge

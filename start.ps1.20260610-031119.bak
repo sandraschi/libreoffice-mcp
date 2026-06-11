@@ -1,4 +1,4 @@
-Param(
+﻿Param(
     [switch]$Headless,
     [switch]$BackendOnly,
     [switch]$FrontendOnly,
@@ -25,16 +25,10 @@ if (-not (Test-Path -LiteralPath $FleetStartPath)) {
     exit 1
 }
 . $FleetStartPath
+Stop-FleetPortSquatters -Ports @(10981, 10983) -Label "libreoffice-mcp"
 
+if (-not (Assert-FleetPortsAvailable -Ports @(10981, 10983) -Label "libreoffice-mcp")) { exit 1 }
 
 & (Join-Path $PSScriptRoot "webapp\start.ps1") @PSBoundParameters
 
-
-
-$FleetStartPath = Join-Path $ProjectRoot "scripts\FleetStartMode.ps1"
-if (-not (Test-Path -LiteralPath $FleetStartPath)) {
-    Write-Host "ERROR: Missing vendored launcher helper: $FleetStartPath" -ForegroundColor Red
-    exit 1
-}
-. $FleetStartPath
 

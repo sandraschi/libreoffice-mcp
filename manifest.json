@@ -49,7 +49,9 @@
     }
   },
   "tools": [
-    { "name": "libreoffice", "description": "Portmanteau: convert, convert_batch, merge, batch_pack, pdf_merge, watch, status, bridge" },
+    { "name": "libreoffice", "description": "Portmanteau: convert, merge, batch, pdf_merge, watch, status, bridge" },
+    { "name": "libreoffice_writer", "description": "Writer live: live_write, live_type, macros (.oxt bridge)" },
+    { "name": "libreoffice_calc", "description": "Calc live: type_cells, pivot demo, read_file (calc .oxt)" },
     { "name": "libreoffice_agentic_workflow", "description": "Multi-step document goals via sampling (SEP-1577)" },
     { "name": "libreoffice_help", "description": "Help index for operations and coworker flows" },
     { "name": "show_libreoffice_status_card", "description": "Prefab status card (soffice + bridge)" },

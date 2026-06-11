@@ -152,6 +152,114 @@ async def libreoffice(
     )
 
 
+@mcp.tool(version="0.3.0")
+async def libreoffice_writer(
+    operation: Annotated[str, Field(description="Writer live op: status, live_write, live_type, …")],
+    prompt: Annotated[str | None, Field(description="Prompt for live_write")] = None,
+    live_text: Annotated[str | None, Field(description="Text for live_type / insert_text")] = None,
+    text: Annotated[str | None, Field(description="insert_text body")] = None,
+    prefer_session: Annotated[bool, Field(description="Use live .oxt bridge")] = True,
+    headless_fallback: Annotated[bool, Field(description="Fallback when bridge offline")] = True,
+    typewriter_wpm: Annotated[float | None, Field(description="WPM for typewriter")] = None,
+    max_words: Annotated[int | None, Field(description="Max words for live_write")] = None,
+    macro_uri: Annotated[str | None, Field(description="UNO macro URI")] = None,
+    macro_name: Annotated[str | None, Field(description="Macro name")] = None,
+    macro_language: Annotated[str, Field(description="Basic or Python")] = "Basic",
+    macro_location: Annotated[str, Field(description="application or document")] = "application",
+    macro_library: Annotated[str | None, Field(description="Basic library")] = None,
+    macro_module: Annotated[str | None, Field(description="Basic module")] = None,
+    macro_args: Annotated[list[Any] | None, Field(description="Macro args")] = None,
+    document_path: Annotated[str | None, Field(description="Open existing document")] = None,
+) -> dict[str, Any]:
+    """Live Writer portmanteau — typewriter, macros (libreoffice-mcp-bridge.oxt)."""
+    from .writer_ops import execute_libreoffice_writer_operation
+
+    return await execute_libreoffice_writer_operation(
+        operation,
+        prompt=prompt,
+        live_text=live_text,
+        text=text,
+        prefer_session=prefer_session,
+        headless_fallback=headless_fallback,
+        typewriter_wpm=typewriter_wpm,
+        max_words=max_words,
+        macro_uri=macro_uri,
+        macro_name=macro_name,
+        macro_language=macro_language,
+        macro_location=macro_location,
+        macro_library=macro_library,
+        macro_module=macro_module,
+        macro_args=macro_args,
+        document_path=document_path,
+    )
+
+
+@mcp.tool(version="0.3.0")
+async def libreoffice_calc(
+    operation: Annotated[str, Field(description="Calc live op: live_pivot_demo, type_cells, …")],
+    input_path: Annotated[str | None, Field(description="Path for read_file")] = None,
+    sheet_name: Annotated[str | None, Field(description="Sheet name")] = None,
+    row: Annotated[int | None, Field(description="Cell row (0-based)")] = None,
+    col: Annotated[int | None, Field(description="Cell col (0-based)")] = None,
+    value: Annotated[str | float | None, Field(description="Cell value")] = None,
+    start_row: Annotated[int, Field(description="Range start row")] = 0,
+    start_col: Annotated[int, Field(description="Range start col")] = 0,
+    end_row: Annotated[int | None, Field(description="Range end row")] = None,
+    end_col: Annotated[int | None, Field(description="Range end col")] = None,
+    values: Annotated[list[list[Any]] | None, Field(description="2D values for set_range")] = None,
+    cells: Annotated[list[dict[str, Any]] | None, Field(description="Cells for type_cells")] = None,
+    delay_sec: Annotated[float | None, Field(description="Delay between cells")] = None,
+    max_rows: Annotated[int, Field(description="Max rows for read_file")] = 100,
+    source_range: Annotated[str, Field(description="Pivot source A1:D7")] = "A1:D7",
+    dest_row: Annotated[int, Field(description="Pivot destination row")] = 9,
+    dest_col: Annotated[int, Field(description="Pivot destination col")] = 0,
+    row_field: Annotated[str, Field(description="Pivot row field")] = "Region",
+    data_field: Annotated[str, Field(description="Pivot data field")] = "Revenue",
+    pivot_name: Annotated[str, Field(description="Pivot table name")] = "FleetPivot",
+    typewriter_seed: Annotated[bool, Field(description="Typewriter demo data before pivot")] = True,
+    macro_uri: Annotated[str | None, Field(description="UNO macro URI")] = None,
+    macro_name: Annotated[str | None, Field(description="Macro name")] = None,
+    macro_language: Annotated[str, Field(description="Basic or Python")] = "Basic",
+    macro_location: Annotated[str, Field(description="application or document")] = "application",
+    macro_library: Annotated[str | None, Field(description="Basic library")] = None,
+    macro_module: Annotated[str | None, Field(description="Basic module")] = None,
+    macro_args: Annotated[list[Any] | None, Field(description="Macro args")] = None,
+) -> dict[str, Any]:
+    """Live Calc portmanteau — cell typewriter + Data Pilot pivot (libreoffice-mcp-calc-bridge.oxt)."""
+    from .calc_ops import execute_libreoffice_calc_operation
+
+    return await execute_libreoffice_calc_operation(
+        operation,
+        input_path=input_path,
+        sheet_name=sheet_name,
+        row=row,
+        col=col,
+        value=value,
+        start_row=start_row,
+        start_col=start_col,
+        end_row=end_row,
+        end_col=end_col,
+        values=values,
+        cells=cells,
+        delay_sec=delay_sec,
+        max_rows=max_rows,
+        source_range=source_range,
+        dest_row=dest_row,
+        dest_col=dest_col,
+        row_field=row_field,
+        data_field=data_field,
+        pivot_name=pivot_name,
+        typewriter_seed=typewriter_seed,
+        macro_uri=macro_uri,
+        macro_name=macro_name,
+        macro_language=macro_language,
+        macro_location=macro_location,
+        macro_library=macro_library,
+        macro_module=macro_module,
+        macro_args=macro_args,
+    )
+
+
 @mcp.tool(version="0.2.0")
 async def libreoffice_help(
     topic: Annotated[
@@ -219,8 +327,8 @@ def libreoffice_convert_playbook() -> str:
 def libreoffice_capabilities_resource() -> str:
     """Machine-readable capability summary."""
     return (
-        "LibreOffice MCP (FastMCP 3.3). Tools: libreoffice, libreoffice_help, "
-        "libreoffice_agentic_workflow, show_libreoffice_status_card, show_templates_card. "
+        "LibreOffice MCP (FastMCP 3.3). Tools: libreoffice, libreoffice_writer, libreoffice_calc, "
+        "libreoffice_help, libreoffice_agentic_workflow, prefabs. "
         "Sampling: LIBREOFFICE_MCP_SAMPLING_* or client LLM. Skills: skill://*/SKILL.md. "
         "REST: /health, /api/*. HTTP MCP: /mcp"
     )
@@ -257,10 +365,13 @@ def build_app() -> FastAPI:
     app.mount("/mcp", mcp.http_app(path="/", transport="http", stateless_http=True))
     app.include_router(api_router, prefix="/api")
     from .writer_bridge_routes import writer_router
+    from .calc_bridge_routes import calc_router
 
     app.include_router(writer_router)
+    app.include_router(calc_router)
 
     from .live_session import writer_session_connected
+    from .calc_session import calc_session_connected
 
     @app.get("/health")
     async def health() -> dict[str, Any]:
@@ -277,6 +388,7 @@ def build_app() -> FastAPI:
             "extension_bridge_url": bridge.get("url"),
             "extension_tool_count": bridge.get("tool_count", 0),
             "writer_bridge_connected": writer_session_connected(),
+            "calc_bridge_connected": calc_session_connected(),
             "output_dir": str(settings.output_dir),
             "templates_dir": str(settings.templates_dir),
             "sampling": sampling_handler.status(),

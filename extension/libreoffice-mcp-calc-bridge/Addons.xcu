@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oor:component-data xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" oor:name="Addons" oor:package="org.openoffice.Office">
+  <node oor:name="AddonUI">
+    <node oor:name="OfficeMenuBar">
+      <node oor:name="com.libreoffice.mcp.calc.bridge.menubar" oor:op="fuse">
+        <prop oor:name="URL">
+          <value>private:resource/menubar/menubar</value>
+        </prop>
+        <node oor:name="Menu">
+          <node oor:name="MCPCalcBridgeMenu" oor:op="replace">
+            <prop oor:name="Title">
+              <value xml:lang="en">MCP Calc Bridge</value>
+            </prop>
+            <node oor:name="StartCalcBridge" oor:op="replace">
+              <prop oor:name="Title">
+                <value xml:lang="en">Start Calc bridge</value>
+              </prop>
+              <prop oor:name="URL">
+                <value>service:com.libreoffice.mcp.calc.bridge.StartupJob?StartCalcBridge</value>
+              </prop>
+            </node>
+            <node oor:name="StopCalcBridge" oor:op="replace">
+              <prop oor:name="Title">
+                <value xml:lang="en">Stop Calc bridge</value>
+              </prop>
+              <prop oor:name="URL">
+                <value>service:com.libreoffice.mcp.calc.bridge.StartupJob?StopCalcBridge</value>
+              </prop>
+            </node>
+            <node oor:name="CalcBridgeStatus" oor:op="replace">
+              <prop oor:name="Title">
+                <value xml:lang="en">Calc bridge status</value>
+              </prop>
+              <prop oor:name="URL">
+                <value>service:com.libreoffice.mcp.calc.bridge.StartupJob?CalcBridgeStatus</value>
+              </prop>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+</oor:component-data>

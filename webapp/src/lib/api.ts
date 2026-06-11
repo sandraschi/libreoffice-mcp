@@ -346,9 +346,16 @@ export const api = {
   liveStatus: () =>
     getJson<{
       writer_bridge_connected: boolean
+      calc_bridge_connected?: boolean
       connected: boolean
       pending_tasks: number
     }>('/api/live/status'),
+  calcLiveStatus: () =>
+    getJson<{
+      calc_bridge_connected: boolean
+      connected: boolean
+      pending_tasks: number
+    }>('/api/live/calc/status'),
   liveWrite: (body: {
     prompt: string
     wpm?: number
@@ -363,5 +370,18 @@ export const api = {
     postJson<{ success: boolean; message?: string }>(
       '/api/live/launch-writer',
       {},
+    ),
+  launchCalc: () =>
+    postJson<{ success: boolean; message?: string }>(
+      '/api/live/launch-calc',
+      {},
+    ),
+  livePivotDemo: (body: {
+    typewriter_seed?: boolean
+    launch_calc?: boolean
+  }) =>
+    postJson<{ success: boolean; data: Record<string, unknown> }>(
+      '/api/live/calc/pivot-demo',
+      body,
     ),
 }

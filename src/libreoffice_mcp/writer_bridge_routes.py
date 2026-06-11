@@ -88,7 +88,7 @@ async def api_live_write(body: LiveWriteRequest) -> dict[str, Any]:
         headless_fallback=body.headless_fallback,
         launch_writer=body.launch_writer,
     )
-    return {"success": result.get("success", False), "data": result}
+    return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
 
 
 @writer_router.post("/api/live/type")
@@ -100,7 +100,7 @@ async def api_live_type(body: LiveTypeRequest) -> dict[str, Any]:
         headless_fallback=body.headless_fallback,
         new_document=body.new_document,
     )
-    return {"success": result.get("success", False), "data": result}
+    return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
 
 
 @writer_router.post("/api/live/launch-writer")
@@ -133,9 +133,13 @@ async def api_live_events(request: Request):
 
 @writer_router.get("/api/live/status")
 async def api_live_status() -> dict[str, Any]:
+    from .calc_session import calc_session_connected, calc_session_status
+
     return {
         "success": True,
         "writer_bridge_connected": writer_session_connected(),
+        "calc_bridge_connected": calc_session_connected(),
         **writer_session_status(),
+        "calc": calc_session_status(),
         "recent_events": recent_live_events(10),
     }

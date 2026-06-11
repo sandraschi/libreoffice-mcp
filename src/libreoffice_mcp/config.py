@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     max_upload_bytes: int = 50 * 1024 * 1024
     live_typewriter_wpm: float = 180.0
     live_max_words: int = 400
+    live_calc_cell_delay_sec: float = 0.08
 
     central_docs_path: str = r"D:\Dev\repos\mcp-central-docs"
     ollama_base_url: str = "http://127.0.0.1:11434"

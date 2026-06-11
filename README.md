@@ -2,7 +2,7 @@
 
 General-purpose LibreOffice automation for agents and humans — headless **Writer, Calc, and Impress** conversion, ODT template merge, PDF combine, folder watch, **live Writer typewriter**, and optional extension MCP.
 
-**Version 0.2.0** · [INSTALL.md](INSTALL.md) · [docs/FEATURES.md](docs/FEATURES.md) · [docs/LIVE_WRITER.md](docs/LIVE_WRITER.md)
+**Version 0.3.0** · [INSTALL.md](INSTALL.md) · [docs/FEATURES.md](docs/FEATURES.md) · [docs/LIVE_WRITER.md](docs/LIVE_WRITER.md) · [docs/EXTENSION_CALC_BRIDGE.md](docs/EXTENSION_CALC_BRIDGE.md) · [docs/COMPARISON-OTHER-LO-MCP.md](docs/COMPARISON-OTHER-LO-MCP.md)
 
 ## How it runs
 
@@ -10,6 +10,7 @@ General-purpose LibreOffice automation for agents and humans — headless **Writ
 |------|----------|------|
 | **Headless (default)** | `soffice --headless` | Convert, merge, batch, PDF merge — no GUI |
 | **Live Writer (optional)** | Writer + **libreoffice-mcp-bridge.oxt** | Auto-start bridge; watch typing + UNO macros |
+| **Live Calc (optional)** | Calc + **libreoffice-mcp-calc-bridge.oxt** | Cell typewriter + Data Pilot pivot in GUI |
 | **Extension bridge (optional)** | Live LO + WriterAgent/mcp-libre | In-app UNO tools on `:8765` |
 
 > **Headless by default** — most tools spawn headless `soffice` automatically. **Open Writer + run the bridge macro** only when you want to *watch* live typing. LibreOffice must be installed — [INSTALL.md](INSTALL.md).

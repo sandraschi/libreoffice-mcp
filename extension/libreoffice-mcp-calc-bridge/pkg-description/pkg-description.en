@@ -1,0 +1,5 @@
+LibreOffice MCP Calc Bridge — live cell typing, range fill, and Data Pilot (pivot) tables in Calc GUI.
+
+Polls libreoffice-mcp on port 10981. Install libreoffice-mcp-calc-bridge.oxt, run `just webapp`, open Calc.
+
+Inspired by spreadsheet patterns from mcp-libre (external/mcp-libre, MIT).

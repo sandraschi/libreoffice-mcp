@@ -3,29 +3,20 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Literal, cast, get_args
+from typing import Any, Literal, get_args
 
 from .bridge import call_extension_tool, health_summary, probe_extension_bridge
 from .config import settings
 from .formats import document_info, suggested_formats
 from .headless import convert_batch, convert_file
 from .jobs import enqueue_convert
-from .live_session import writer_session_status as get_writer_session_status
-from .live_write import live_type_text, live_write
-from .macro_ops import (
-    MacroLanguage,
-    MacroLocation,
-    build_macro_uri,
-    list_macros_action,
-    macro_action_payload,
-)
+from .spreadsheet_read import read_spreadsheet_data
 from .pack import pack_markdown_files
 from .pdf_ops import merge_pdfs
 from .reveal import reveal_path
 from .storage import index_output
 from .templates import ensure_builtin_templates, list_templates, merge_and_convert
 from .watch_folder import start_watch, stop_watch, watch_status
-from .writer_runtime import execute_writer_action, launch_writer_gui
 
 LibreOfficeOp = Literal[
     "status",
@@ -49,6 +40,7 @@ LibreOfficeOp = Literal[
     "list_macros",
     "bridge_discover",
     "bridge_call",
+    "read_spreadsheet",
     "help",
 ]
 
@@ -95,6 +87,8 @@ async def execute_libreoffice_operation(
             "writer_formats": ["pdf", "docx", "odt", "html", "txt", "rtf"],
             "calc_formats": ["pdf", "xlsx", "ods", "csv", "html"],
             "impress_formats": ["pdf", "pptx", "odp", "html"],
+            "writer_portmanteau": "libreoffice_writer(operation=…)",
+            "calc_portmanteau": "libreoffice_calc(operation=…)",
             "coworker_flows": [
                 "coworker_weekly_report_pdf → fleet-report.odt",
                 "coworker_board_pack → fleet-board-pack.odt",
@@ -123,7 +117,7 @@ async def execute_libreoffice_operation(
             output_format,
             output_stem=output_stem,
         )
-        return {"success": result.get("success", False), "data": result}
+        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
 
     if operation == "batch_pack":
         if not input_paths:
@@ -136,7 +130,7 @@ async def execute_libreoffice_operation(
         )
         if result.get("success") and result.get("output"):
             index_output(Path(result["output"]), fmt=output_format)
-        return {"success": result.get("success", False), "data": result}
+        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
 
     if operation == "pdf_merge":
         if not input_paths:
@@ -147,7 +141,7 @@ async def execute_libreoffice_operation(
         )
         if result.get("success") and result.get("output"):
             index_output(Path(result["output"]), fmt="pdf")
-        return {"success": result.get("success", False), "data": result}
+        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
 
     if operation == "convert_batch":
         if not input_paths:
@@ -156,7 +150,7 @@ async def execute_libreoffice_operation(
         for item in result.get("results", []):
             if item.get("success") and item.get("output"):
                 index_output(Path(item["output"]), fmt=output_format)
-        return {"success": result.get("success", False), "data": result}
+        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
 
     if operation == "convert":
         if not input_path:
@@ -170,7 +164,7 @@ async def execute_libreoffice_operation(
             index_output(Path(result["output"]), fmt=output_format, job_id=None)
         if not result.get("success") and not result.get("suggested_formats"):
             result["suggested_formats"] = suggested_formats(src)
-        return {"success": result.get("success", False), "data": result}
+        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
 
     if operation == "watch_start":
         if not watch_path and not input_path:
@@ -188,81 +182,48 @@ async def execute_libreoffice_operation(
     if operation == "watch_status":
         return {"success": True, "data": watch_status()}
 
-    if operation == "writer_session_status":
-        return {"success": True, "data": get_writer_session_status()}
+    if operation in (
+        "writer_session_status",
+        "launch_writer",
+        "live_write",
+        "live_type",
+        "list_macros",
+        "run_macro",
+        "run_python_macro",
+    ):
+        from .writer_ops import execute_libreoffice_writer_operation
 
-    if operation == "launch_writer":
-        return launch_writer_gui()
-
-    if operation == "live_write":
-        if not prompt:
-            return {"success": False, "error": "prompt required for live_write"}
-        wpm = typewriter_wpm if typewriter_wpm is not None else settings.live_typewriter_wpm
-        words = max_words if max_words is not None else settings.live_max_words
-        result = await live_write(
-            prompt,
-            wpm=wpm,
-            max_words=words,
+        op_map = {
+            "writer_session_status": "status",
+            "launch_writer": "launch_writer",
+            "live_write": "live_write",
+            "live_type": "live_type",
+            "list_macros": "list_macros",
+            "run_macro": "run_macro",
+            "run_python_macro": "run_python_macro",
+        }
+        return await execute_libreoffice_writer_operation(
+            op_map[operation],
+            prompt=prompt,
+            live_text=live_text,
             prefer_session=prefer_session,
             headless_fallback=headless_fallback,
+            typewriter_wpm=typewriter_wpm,
+            max_words=max_words,
+            macro_uri=macro_uri,
+            macro_name=macro_name,
+            macro_language=macro_language,
+            macro_location=macro_location,
+            macro_library=macro_library,
+            macro_module=macro_module,
+            macro_args=macro_args,
         )
-        return {"success": result.get("success", False), "data": result}
 
-    if operation == "live_type":
-        if not live_text and not prompt:
-            return {"success": False, "error": "live_text or prompt required for live_type"}
-        wpm = typewriter_wpm if typewriter_wpm is not None else settings.live_typewriter_wpm
-        result = await live_type_text(
-            live_text or prompt or "",
-            wpm=wpm,
-            prefer_session=prefer_session,
-            headless_fallback=headless_fallback,
-        )
-        return {"success": result.get("success", False), "data": result}
-
-    if operation == "list_macros":
-        result = await execute_writer_action(
-            list_macros_action(),
-            prefer_session=True,
-            headless_fallback=False,
-            timeout=20.0,
-        )
-        return {"success": result.get("success", False), "data": result}
-
-    if operation in ("run_macro", "run_python_macro"):
-        if not macro_uri and not macro_name:
-            return {"success": False, "error": "macro_uri or macro_name required"}
-        lang: MacroLanguage = "Python" if operation == "run_python_macro" else cast(
-            MacroLanguage, macro_language or "Basic"
-        )
-        loc = cast(MacroLocation, macro_location or "application")
-        try:
-            action = macro_action_payload(
-                macro_uri=macro_uri,
-                macro_name=macro_name,
-                language=lang,
-                location=loc,
-                library=macro_library,
-                module=macro_module,
-                args=macro_args,
-            )
-        except ValueError as exc:
-            return {"success": False, "error": str(exc)}
-        result = await execute_writer_action(
-            action,
-            prefer_session=prefer_session,
-            headless_fallback=False,
-            timeout=60.0,
-        )
-        if macro_uri is None and macro_name:
-            result["macro_uri"] = build_macro_uri(
-                macro_name,
-                language=lang,
-                location=loc,
-                library=macro_library,
-                module=macro_module,
-            )
-        return {"success": result.get("success", False), "data": result}
+    if operation == "read_spreadsheet":
+        if not input_path:
+            return {"success": False, "error": "input_path required for read_spreadsheet"}
+        data = read_spreadsheet_data(Path(input_path))
+        return {"success": data.get("success", False), "data": data}
 
     if operation == "reveal_output":
         target = input_path or output_stem
