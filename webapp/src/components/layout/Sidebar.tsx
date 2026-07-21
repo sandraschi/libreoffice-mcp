@@ -80,9 +80,9 @@ export function Sidebar() {
         <span className="text-amber-400 font-display text-lg font-medium whitespace-nowrap">
           {sidebarOpen ? 'LibreOffice MCP' : 'LO'}
         </span>
-        {sidebarOpen && (
+        {sidebarOpen && health?.version && (
           <span className="ml-2 text-xs text-ink-500 font-mono whitespace-nowrap">
-            v0.3 α
+            v{health.version}
           </span>
         )}
       </div>

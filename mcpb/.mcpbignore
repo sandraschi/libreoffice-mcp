@@ -1,0 +1,13 @@
+native/
+webapp/
+web_sota/
+node_modules/
+.venv/
+target/
+dist/
+htmlcov/
+__pycache__/
+*.pyc
+.git/
+build/
+*.mcpb

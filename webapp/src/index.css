@@ -21,6 +21,11 @@ body {
   color: var(--text);
   font-family: "IBM Plex Sans", sans-serif;
   margin: 0;
+  color-scheme: dark;
+}
+
+select, input, textarea {
+  color-scheme: dark;
 }
 
 ::-webkit-scrollbar {

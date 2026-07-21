@@ -1,3 +1,18 @@
+
+## [Unreleased] — 2026-06-14
+
+### Fixed
+- Tauri build: resolved Rust crate conflict (brotli/alloc-no-stdlib)
+- Tauri build: fixed PyInstaller path mismatch (hyphen to underscore in src dirs)
+- Tauri build: fixed TypeScript errors (unused imports, useRef arg, import.meta.env)
+- Tauri CORS: allow_origins includes tauri://localhost for WebView access
+
+### Added
+- CUA-NSIS: just cua-nsis-test recipe, smoke script, config
+- CUA-NSIS: build.ps1 now copies NSIS installer to dist/
+- CUA-NSIS: 11-phase smoke test (install, launch, WebView OCR, diagnostics, uninstall)
+- CUA-NSIS: local certification — all 11 phases pass locally (2026-06-14)
+
 # Changelog
 
 ## 0.3.0 (2026-06-01) — Shipped .oxt bridge + UNO macros
@@ -66,3 +81,5 @@ Initial release: headless LibreOffice automation for Fritz coworker PDF/ODT deli
 
 - 17 pytest tests (`tests/` incl. `test_api.py` REST coverage)
 - 9 Playwright e2e tests (`webapp/e2e/`) — dashboard navigation, templates, tools hub, REST
+
+

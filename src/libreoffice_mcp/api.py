@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json as _json
 import logging
 import mimetypes
 from datetime import UTC, datetime
@@ -98,8 +99,15 @@ class WatchRequest(BaseModel):
     output_format: str = "pdf"
 
 
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+
 class ChatRequest(BaseModel):
     message: str
+    system_prompt: str = Field(default="", description="System prompt composed from skill + personality")
+    history: list[ChatMessage] = Field(default_factory=list, description="Prior conversation messages")
     execute: bool = Field(default=True, description="Execute planned LibreOffice ops when true")
     params: dict[str, Any] = Field(default_factory=dict)
 
@@ -265,18 +273,40 @@ async def api_llm_discover() -> dict[str, Any]:
                             "base_url": base,
                             "online": True,
                             "models": models[:20],
+                            "chat_endpoint": "ollama" if name == "ollama" else "openai",
                         }
                     )
                     return
-        except httpx.HTTPError:
+        except (httpx.HTTPError, OSError):
             pass
         providers.append(
-            {"id": name, "name": name, "base_url": base, "online": False, "models": []}
+            {"id": name, "name": name, "base_url": base, "online": False, "models": [], "chat_endpoint": "ollama" if name == "ollama" else "openai"}
         )
 
     await probe("ollama", settings.ollama_base_url, "/api/tags")
     await probe("lmstudio", settings.lmstudio_base_url, "/v1/models")
-    return {"providers": providers}
+    return {"providers": providers, "gpu": _detect_gpu()}
+
+
+def _detect_gpu() -> dict[str, Any]:
+    """Probe for NVIDIA GPU via nvidia-smi."""
+    try:
+        import subprocess
+        proc = subprocess.run(
+            ["nvidia-smi", "--query-gpu=name,memory.total,driver_version", "--format=csv,noheader"],
+            capture_output=True, text=True, timeout=5, check=False,
+        )
+        if proc.returncode == 0 and proc.stdout.strip():
+            lines = proc.stdout.strip().splitlines()
+            gpus = []
+            for line in lines[:4]:
+                parts = [p.strip() for p in line.split(",")]
+                if len(parts) >= 1:
+                    gpus.append({"name": parts[0], "memory": parts[1] if len(parts) > 1 else "", "driver": parts[2] if len(parts) > 2 else ""})
+            return {"detected": True, "count": len(gpus), "devices": gpus} if gpus else {"detected": False}
+    except Exception:
+        pass
+    return {"detected": False}
 
 
 @router.post("/test-llm")
@@ -386,7 +416,46 @@ async def api_agentic(body: AgenticRequest) -> dict[str, Any]:
 
 @router.post("/chat")
 async def api_chat(body: ChatRequest) -> dict[str, Any]:
-    """Agentic chat — plan and optionally execute LibreOffice operations from natural language."""
+    """Agentic chat — LLM-powered when system_prompt + provider available, else rule-based."""
+    if body.system_prompt:
+        msgs: list[dict[str, str]] = [{"role": "system", "content": body.system_prompt}]
+        for msg in body.history:
+            msgs.append({"role": msg.role, "content": msg.content})
+        msgs.append({"role": "user", "content": body.message})
+
+        # Try Ollama first, then LM Studio (OpenAI-compat), then OpenAI cloud
+        attempts = [
+            (settings.ollama_base_url, settings.ollama_model, False),
+            (settings.lmstudio_base_url, settings.openai_model, True),
+            ("https://api.openai.com/v1", settings.openai_model, True),
+        ]
+        for base_url, model, is_openai in attempts:
+            if not base_url or not model:
+                continue
+            if is_openai and base_url == "https://api.openai.com/v1" and not settings.openai_api_key:
+                continue
+            headers = {}
+            if is_openai and settings.openai_api_key:
+                headers["Authorization"] = f"Bearer {settings.openai_api_key}"
+            try:
+                u = f"{base_url.rstrip('/')}/{'v1/chat/completions' if is_openai else 'api/chat'}"
+                async with httpx.AsyncClient(timeout=30.0) as client:
+                    r = await client.post(u, json={"model": model, "messages": msgs, "stream": False}, headers=headers)
+                    if r.is_success:
+                        data = r.json()
+                        content = ""
+                        if is_openai:
+                            choice = (data.get("choices") or [None])[0]
+                            content = (choice or {}).get("message", {}).get("content", "")
+                        else:
+                            content = (data.get("message") or {}).get("content", "")
+                        if content:
+                            return {"role": "assistant", "content": content}
+            except (httpx.HTTPError, OSError, KeyError):
+                continue
+
+        log.info("No LLM provider available for chat, falling back to rule-based planner")
+
     if body.execute:
         result = await execute_plan(body.message, params=body.params, execute=True)
     else:
@@ -395,6 +464,68 @@ async def api_chat(body: ChatRequest) -> dict[str, Any]:
     if result.get("executed") and result.get("results"):
         reply = f"{reply}\n\nExecuted {len(result['results'])} step(s)."
     return {"role": "assistant", "content": reply, "plan": result}
+
+
+@router.post("/chat/stream")
+async def api_chat_stream(body: ChatRequest):
+    """Streaming chat — NDJSON SSE response from the first available LLM provider."""
+    from fastapi.responses import StreamingResponse
+
+    async def generate():
+        if not body.system_prompt:
+            yield _json.dumps({"type": "error", "content": "No system prompt configured."}) + "\n"
+            return
+        msgs: list[dict[str, str]] = [{"role": "system", "content": body.system_prompt}]
+        for msg in body.history:
+            msgs.append({"role": msg.role, "content": msg.content})
+        msgs.append({"role": "user", "content": body.message})
+
+        attempts = [
+            (settings.ollama_base_url, settings.ollama_model, False),
+            (settings.lmstudio_base_url, settings.openai_model, True),
+        ]
+        for base_url, model, is_openai in attempts:
+            if not base_url or not model:
+                continue
+            try:
+                u = f"{base_url.rstrip('/')}/{'v1/chat/completions' if is_openai else 'api/chat'}"
+                async with httpx.AsyncClient(timeout=60.0) as client:
+                    async with client.stream("POST", u, json={"model": model, "messages": msgs, "stream": True}) as resp:
+                        if not resp.is_success:
+                            continue
+                        async for line in resp.aiter_lines():
+                            if not line.strip():
+                                continue
+                            if is_openai:
+                                if line.startswith("data: "):
+                                    chunk = line[6:].strip()
+                                    if chunk == "[DONE]":
+                                        break
+                                    try:
+                                        data = _json.loads(chunk)
+                                        delta = (data.get("choices") or [{}])[0].get("delta", {})
+                                        content = delta.get("content", "")
+                                        if content:
+                                            yield _json.dumps({"type": "delta", "content": content}) + "\n"
+                                    except _json.JSONDecodeError:
+                                        pass
+                            else:
+                                try:
+                                    data = _json.loads(line)
+                                    if data.get("done"):
+                                        break
+                                    content = (data.get("message") or {}).get("content", "")
+                                    if content:
+                                        yield _json.dumps({"type": "delta", "content": content}) + "\n"
+                                except _json.JSONDecodeError:
+                                    pass
+                        yield _json.dumps({"type": "done"}) + "\n"
+                        return
+            except Exception:
+                continue
+        yield _json.dumps({"type": "error", "content": "No LLM provider available."}) + "\n"
+
+    return StreamingResponse(generate(), media_type="application/x-ndjson")
 
 
 @router.get("/tools")

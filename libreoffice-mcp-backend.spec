@@ -20,9 +20,10 @@ a = Analysis(
     ["run_server.py"],
     pathex=["src"],
     binaries=[],
+    
     datas=datas,
     hiddenimports=[
-    "_strptime",
+
     "_datetime",
         "uvicorn.logging",
         "uvicorn.loops",
@@ -38,12 +39,14 @@ a = Analysis(
         "libreoffice_mcp.sampling.lo_sampling_handler",
         "libreoffice_mcp.mcp_agentic",
         "pypdf",
-    ],
+    "_strptime",
+],
     hookspath=[],
+    
     hooksconfig={},
     runtime_hooks=[],
     excludes=["tkinter", "matplotlib", "numpy", "PIL", "pandas", "scipy"],
-    noarchive=False,
+    noarchive=True,
     optimize=0,
 )
 pyz = PYZ(a.pure)
@@ -54,6 +57,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
+    
     name="libreoffice-mcp-backend",
     debug=False,
     bootloader_ignore_signals=False,
@@ -68,3 +72,8 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
 )
+
+
+
+
+

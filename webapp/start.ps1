@@ -15,6 +15,8 @@ if (-not (Test-Path -LiteralPath $FleetStartPath)) {
 $FleetStart = Initialize-FleetStartMode @PSBoundParameters
 Enter-FleetHeadlessConsole -Headless:$Headless -BackendOnly:$BackendOnly
 
+$WebPort = 10983
+$BackendPort = 10981
 $portResolve = @{
     Ports      = @($WebPort, $BackendPort)
     Label      = "libreoffice-mcp"
@@ -30,8 +32,6 @@ $portState = Resolve-FleetPortConflict @portResolve
 if ($portState.Action -eq 'Blocked') { exit 1 }
 if ($portState.Reuse) { return }
 $ErrorActionPreference = "Stop"
-$WebPort = 10983
-$BackendPort = 10981
 $Soffice = "C:\Program Files\LibreOffice\program\soffice.exe"
 
 Write-Host "=== libreoffice-mcp (FastMCP 3.2 + Vite dashboard) ===" -ForegroundColor Cyan

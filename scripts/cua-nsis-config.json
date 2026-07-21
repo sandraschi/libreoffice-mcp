@@ -1,0 +1,21 @@
+{
+  "product_name": "LibreOffice MCP Operator",
+  "install_dir": "%LOCALAPPDATA%\\LibreOffice MCP",
+  "operator_exe": "libreoffice-mcp-native.exe",
+  "backend_process_names": ["libreoffice-mcp-native", "libreoffice-mcp-backend"],
+  "backend_port": 10981,
+  "health_path": "/health",
+  "diagnostics_path": "/health",
+  "feature_smoke_path": "/api/v1/capabilities",
+  "frontend_port": 10983,
+  "window_title_re": "LibreOffice MCP",
+  "bridge_ok_text": "LibreOffice",
+  "nav_routes": [["Dashboard","Dashboard"],["Convert","Convert"],["Settings","Settings"],["Help","Help"]],
+  "sidebar_click_x": 30,
+  "sidebar_first_y": 80,
+  "sidebar_step_y": 36,
+  "nsis_glob": "native/target/release/bundle/nsis/LibreOffice MCP_*_x64-setup.exe",
+  "uninstall_registry_filter": "*LibreOffice MCP*",
+  "env_vars": {}
+}
+

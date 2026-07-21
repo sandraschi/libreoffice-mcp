@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { HelpCircle, X } from 'lucide-react'
 import { useLocation } from 'react-router-dom'
 import { type Toast, useStore } from '../../store'
+import { api } from '../../lib/api'
 
 const TITLES: Record<string, string> = {
   '/': 'Dashboard',
@@ -56,8 +57,10 @@ function ToastItem({ t }: { t: Toast }) {
 
 export function Topbar() {
   const location = useLocation()
-  const { toasts, setHelpOpen } = useStore()
+  const { toasts, setHelpOpen, health } = useStore()
   const title = TITLES[location.pathname] ?? location.pathname
+  const be = health?.ports?.backend
+  const fe = health?.ports?.frontend
 
   return (
     <>
@@ -67,7 +70,7 @@ export function Topbar() {
         </h1>
         <div className="flex items-center gap-3">
           <span className="text-xs font-mono text-ink-600">
-            :10981 / :10983
+            {be && fe ? `:${be} / :${fe}` : '—'}
           </span>
           <button
             type="button"

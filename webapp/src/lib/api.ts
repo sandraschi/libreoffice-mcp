@@ -1,3 +1,35 @@
+export type ProviderInfo = {
+  id: string
+  name: string
+  base_url: string
+  online: boolean
+  models: string[]
+}
+
+export type GpuInfo = {
+  detected: boolean
+  count?: number
+  devices?: Array<{ name: string; memory?: string; driver?: string }>
+}
+
+export type LlmDiscover = {
+  providers: ProviderInfo[]
+  gpu?: GpuInfo
+}
+
+export type ChatRequest = {
+  message: string
+  system_prompt?: string
+  history?: { role: string; content: string }[]
+  execute?: boolean
+}
+
+export type ChatResponse = {
+  role: string
+  content: string
+  plan?: AgenticPlan
+}
+
 export type Health = {
   status: string
   version: string
@@ -307,14 +339,13 @@ export const api = {
     getJson<{ skill: SkillEntry }>(
       `/api/skills/${encodeURIComponent(id)}`,
     ).then((r) => r.skill),
-  chat: (message: string, execute = true) =>
-    postJson<{ role: string; content: string; plan: AgenticPlan }>(
+  chat: (body: ChatRequest) =>
+    postJson<ChatResponse>(
       '/api/chat',
-      {
-        message,
-        execute,
-      },
+      body,
     ),
+  llmDiscover: () =>
+    getJson<LlmDiscover>('/api/llm/discover'),
   upload: async (file: File): Promise<UploadResult> => {
     const form = new FormData()
     form.append('file', file)

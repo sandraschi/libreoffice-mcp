@@ -1,0 +1,567 @@
+[
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "status"},
+    "description": "Check server health — soffice and bridge status"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "help"},
+    "description": "Get full operation catalog and supported formats"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/report.md", "output_format": "pdf"},
+    "description": "Convert a markdown file to PDF"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/letter.docx", "output_format": "pdf"},
+    "description": "Convert a DOCX file to PDF"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/presentation.pptx", "output_format": "pdf"},
+    "description": "Convert a PowerPoint presentation to PDF"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/spreadsheet.xlsx", "output_format": "csv"},
+    "description": "Convert an Excel spreadsheet to CSV"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/manual.odt", "output_format": "docx"},
+    "description": "Convert an ODT file to DOCX for Word compatibility"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/data.ods", "output_format": "xlsx"},
+    "description": "Convert an ODS spreadsheet to XLSX"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/slides.odp", "output_format": "pptx"},
+    "description": "Convert an ODP presentation to PPTX"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/notes.txt", "output_format": "pdf"},
+    "description": "Convert a plain text file to PDF"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/webpage.html", "output_format": "pdf"},
+    "description": "Convert an HTML document to PDF"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/readme.rtf", "output_format": "odt"},
+    "description": "Convert an RTF file to ODT"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/data.csv", "output_format": "ods"},
+    "description": "Convert a CSV file to ODS spreadsheet"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/drawing.svg", "output_format": "pdf"},
+    "description": "Convert an SVG drawing to PDF"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/drawing.odg", "output_format": "pdf"},
+    "description": "Convert a Draw ODG file to PDF"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/report.md", "output_format": "html"},
+    "description": "Convert markdown to HTML"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/report.md", "output_format": "docx"},
+    "description": "Convert markdown to DOCX for Word"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/report.md", "output_format": "txt"},
+    "description": "Convert markdown to plain text"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Dev/repos/aiwatcher-mcp/README.md", "output_format": "pdf", "queue_job": true},
+    "description": "Convert a README to PDF as a background job"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert_batch", "input_paths": ["C:/docs/ch1.md", "C:/docs/ch2.md", "C:/docs/ch3.md"], "output_format": "pdf"},
+    "description": "Batch convert three markdown files to PDF"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert_batch", "input_paths": ["C:/docs/a.docx", "C:/docs/b.docx", "C:/docs/c.docx"], "output_format": "odt"},
+    "description": "Batch convert DOCX files to ODT"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "document_info", "input_path": "C:/Users/sandr/Documents/report.md"},
+    "description": "Inspect a markdown file before conversion"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "document_info", "input_path": "C:/Users/sandr/Documents/data.xlsx"},
+    "description": "Inspect an Excel file to see suggested output formats"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "document_info", "input_path": "C:/Users/sandr/Documents/slides.pptx"},
+    "description": "Inspect a PowerPoint file"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "document_info", "input_path": "C:/Users/sandr/Documents/image.pdf"},
+    "description": "Inspect a PDF to see the detected family"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "list_templates"},
+    "description": "List all available ODT templates"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "merge", "template": "fleet-report.odt", "placeholders": {"TITLE": "Weekly Status", "DATE": "2026-06-23", "SUMMARY": "All systems operational.", "BODY": "## Details\n\nAll services running normally."}},
+    "description": "Generate a weekly fleet report from template"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "merge", "template": "fleet-report.odt", "placeholders": {"TITLE": "June Fleet Report", "DATE": "2026-06-23", "SUMMARY": "42/42 servers healthy. Zero incidents. 3 PRs merged.", "BODY": "## Backend\nAll healthy.\n\n## CI\nAll green."}, "output_format": "pdf", "output_stem": "fleet-june-23"},
+    "description": "Generate fleet report with custom output stem"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "merge", "template": "fleet-board-pack.odt", "placeholders": {"TITLE": "Board Pack Q2 2026", "DATE": "2026-06-23", "KPI_TABLE": "| KPI | Value | Target |\n|---|---|---|\n| Servers | 42 | 42 |\n| Uptime | 99.9% | 99.5% |", "NARRATIVE": "The fleet maintained full operational readiness through Q2.", "ACTION_ITEMS": "- Bump FastMCP in 12 repos\n- Add NSIS smoke tests"}},
+    "description": "Generate a board pack with KPIs and action items"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "merge", "template": "fleet-artifact-pack.odt", "placeholders": {"TITLE": "SOTA Audit Bundle", "DATE": "2026-06-23", "FILE_COUNT": "14", "BODY": "## Included Files\n\n- audit-report.md\n- port-inventory.csv\n- compliance-matrix.md"}},
+    "description": "Generate an artifact pack index document"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "merge", "template": "fleet-report.odt", "placeholders": {"TITLE": "", "DATE": ""}, "output_format": "odt"},
+    "description": "Merge template with minimal placeholders, keep as ODT"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "batch_pack", "input_paths": ["C:/reports/intro.md", "C:/reports/body.md", "C:/reports/conclusion.md"], "pack_title": "Project Documentation"},
+    "description": "Combine multiple markdown files into a single PDF"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "batch_pack", "input_paths": ["C:/docs/api.md", "C:/docs/guide.md"], "pack_title": "API Documentation", "output_format": "html"},
+    "description": "Combine markdown files into an HTML document"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "batch_pack", "input_paths": ["C:/docs/readme.md"], "pack_title": "Solo Pack", "output_format": "md"},
+    "description": "Pack a single markdown file (returns combined .md)"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "batch_pack", "input_paths": ["C:/docs/ch1.md", "C:/docs/ch2.md"], "pack_title": "Handbook", "output_stem": "handbook-v2", "output_format": "pdf"},
+    "description": "Combine chapters with custom output filename"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "pdf_merge", "input_paths": ["C:/docs/cover.pdf", "C:/docs/content.pdf", "C:/docs/back.pdf"]},
+    "description": "Merge three PDFs into one"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "pdf_merge", "input_paths": ["C:/docs/report-part1.pdf", "C:/docs/report-part2.pdf"], "output_stem": "full-report"},
+    "description": "Merge PDFs with custom output name"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "pdf_merge", "input_paths": ["C:/docs/scan1.pdf", "C:/docs/scan2.pdf", "C:/docs/scan3.pdf", "C:/docs/scan4.pdf"]},
+    "description": "Merge multiple scanned documents"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "read_spreadsheet", "input_path": "C:/Users/sandr/Documents/budget.ods"},
+    "description": "Read data from an ODS spreadsheet"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "read_spreadsheet", "input_path": "C:/Users/sandr/Documents/budget.xlsx"},
+    "description": "Read data from an XLSX spreadsheet"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "read_spreadsheet", "input_path": "C:/Users/sandr/Documents/export.csv"},
+    "description": "Read data from a CSV file"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "watch_start", "watch_path": "C:/Users/sandr/Desktop/incoming", "watch_glob": "*.md"},
+    "description": "Start watching a folder for new markdown files"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "watch_start", "watch_path": "C:/Users/sandr/Documents/drop", "watch_glob": "*.docx", "output_format": "pdf"},
+    "description": "Watch folder and auto-convert DOCX to PDF"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "watch_start", "watch_path": "C:/Users/sandr/Desktop/to-convert", "watch_glob": "*.*", "output_format": "html"},
+    "description": "Watch folder for any file type, convert to HTML"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "watch_status"},
+    "description": "Check folder watcher status"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "watch_stop"},
+    "description": "Stop the folder watcher"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "reveal_output", "input_path": "fleet-report-20260623.pdf"},
+    "description": "Open a converted file in Windows Explorer"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "writer_session_status"},
+    "description": "Check if live Writer bridge is connected"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "launch_writer"},
+    "description": "Launch LibreOffice Writer"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "live_write", "prompt": "Write a 300-word summary of FastMCP 3.3 features", "typewriter_wpm": 60, "max_words": 300},
+    "description": "Stream AI-generated text into Writer at 60 WPM"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "live_write", "prompt": "Generate a project status report for Q2 2026", "typewriter_wpm": 80, "max_words": 500, "prefer_session": true},
+    "description": "Generate a status report with the live bridge"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "live_write", "prompt": "Write meeting minutes about the fleet architecture review", "headless_fallback": false},
+    "description": "Live write with no headless fallback (requires bridge)"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "live_type", "live_text": "## Meeting Notes\n\nDate: 2026-06-23\nAttendees: Sandra, Steve\n\n### Discussion Points\n- Fleet status review\n- FastMCP 3.4 migration timeline\n- NSIS smoke test rollout", "typewriter_wpm": 100},
+    "description": "Type predefined meeting notes into Writer"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "live_type", "live_text": "# Executive Summary\n\nThe fleet continues to operate at peak efficiency with 42 active servers.", "typewriter_wpm": 50},
+    "description": "Type a short executive summary at 50 WPM"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "list_macros"},
+    "description": "List available UNO macros via the extension bridge"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "run_macro", "macro_name": "Standard.Module1.FormatReport", "macro_language": "Basic", "macro_location": "document"},
+    "description": "Run a Basic UNO macro in the open document"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "run_macro", "macro_name": "Standard.Module1.ApplyStyles", "macro_language": "Basic", "macro_location": "application"},
+    "description": "Run an application-level Basic macro to apply styles"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "run_python_macro", "macro_name": "my_macros.ReportGen.generate", "macro_language": "Python", "macro_location": "application"},
+    "description": "Run a Python UNO macro"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "run_macro", "macro_name": "Standard.Module1.MyMacro", "macro_language": "Basic", "macro_location": "document", "macro_args": ["arg1", 42]},
+    "description": "Run a Basic macro with arguments"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "bridge_discover"},
+    "description": "Discover tools available on the extension bridge"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "bridge_call", "bridge_tool": "writer_insert_text", "bridge_arguments": {"text": "Hello from the fleet!"}},
+    "description": "Proxy a tool call to the extension bridge"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "bridge_call", "bridge_tool": "writer_get_content"},
+    "description": "Read current document content via bridge"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "bridge_call", "bridge_tool": "writer_format_bold", "bridge_arguments": {"range": "all"}},
+    "description": "Format text as bold via bridge tool"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "bridge_call", "bridge_tool": "calc_get_cell", "bridge_arguments": {"sheet": "Sheet1", "cell": "B4"}},
+    "description": "Read a cell value via Calc bridge"
+  },
+  {
+    "tool": "libreoffice_writer",
+    "params": {"operation": "status"},
+    "description": "Check Writer bridge connection status"
+  },
+  {
+    "tool": "libreoffice_writer",
+    "params": {"operation": "launch_writer"},
+    "description": "Launch Writer via the dedicated Writer portmanteau"
+  },
+  {
+    "tool": "libreoffice_writer",
+    "params": {"operation": "live_write", "prompt": "Write a one-page introduction to the LibreOffice MCP server", "max_words": 400},
+    "description": "Stream AI-generated intro into Writer"
+  },
+  {
+    "tool": "libreoffice_writer",
+    "params": {"operation": "live_type", "live_text": "Copyright 2026. All rights reserved.", "typewriter_wpm": 120},
+    "description": "Type a copyright notice quickly into Writer"
+  },
+  {
+    "tool": "libreoffice_writer",
+    "params": {"operation": "insert_text", "text": "## Appendix\n\nAdditional reference material goes here."},
+    "description": "Insert a section heading and text at cursor"
+  },
+  {
+    "tool": "libreoffice_writer",
+    "params": {"operation": "run_macro", "macro_name": "Standard.Module1.ApplyTemplate", "macro_language": "Basic", "macro_location": "document"},
+    "description": "Run a Writer macro via the dedicated Writer tool"
+  },
+  {
+    "tool": "libreoffice_writer",
+    "params": {"operation": "run_python_macro", "macro_name": "scripts.format_document", "macro_language": "Python", "macro_location": "application"},
+    "description": "Run a Python document formatting macro"
+  },
+  {
+    "tool": "libreoffice_writer",
+    "params": {"operation": "list_macros"},
+    "description": "List Writer-available macros"
+  },
+  {
+    "tool": "libreoffice_writer",
+    "params": {"operation": "live_write", "prompt": "Write a brief changelog entry for version 0.3.0", "max_words": 200, "headless_fallback": true},
+    "description": "Write with headless fallback if bridge is offline"
+  },
+  {
+    "tool": "libreoffice_calc",
+    "params": {"operation": "status"},
+    "description": "Check Calc bridge connection status"
+  },
+  {
+    "tool": "libreoffice_calc",
+    "params": {"operation": "read_file", "input_path": "C:/Users/sandr/Documents/budget.xlsx", "sheet_name": "Q2"},
+    "description": "Read a specific sheet from an Excel file via Calc"
+  },
+  {
+    "tool": "libreoffice_calc",
+    "params": {"operation": "read_file", "input_path": "C:/Users/sandr/Documents/data.ods", "max_rows": 50},
+    "description": "Read first 50 rows of an ODS spreadsheet"
+  },
+  {
+    "tool": "libreoffice_calc",
+    "params": {"operation": "read_file", "input_path": "C:/Users/sandr/Documents/export.csv"},
+    "description": "Read a CSV file's content via Calc"
+  },
+  {
+    "tool": "libreoffice_calc",
+    "params": {"operation": "type_cells", "cells": [{"row": 0, "col": 0, "value": "Name"}, {"row": 0, "col": 1, "value": "Score"}, {"row": 1, "col": 0, "value": "Alice"}, {"row": 1, "col": 1, "value": 95}], "delay_sec": 0.2},
+    "description": "Type cells with a typewriter delay into Calc"
+  },
+  {
+    "tool": "libreoffice_calc",
+    "params": {"operation": "live_pivot_demo", "source_range": "A1:D7", "row_field": "Region", "data_field": "Revenue", "pivot_name": "SalesByRegion", "typewriter_seed": true},
+    "description": "Run the Calc pivot demo with seeded data"
+  },
+  {
+    "tool": "libreoffice_calc",
+    "params": {"operation": "live_pivot_demo", "source_range": "A1:E20", "row_field": "Category", "data_field": "Amount", "pivot_name": "SpendingByCategory", "dest_row": 22, "dest_col": 0, "typewriter_seed": false},
+    "description": "Create pivot on existing data without seeding"
+  },
+  {
+    "tool": "libreoffice_calc",
+    "params": {"operation": "run_macro", "macro_name": "Standard.Module1.RefreshPivots", "macro_language": "Basic", "macro_location": "document"},
+    "description": "Run a Calc macro to refresh all pivot tables"
+  },
+  {
+    "tool": "libreoffice_calc",
+    "params": {"operation": "run_python_macro", "macro_name": "analysis.run_regression", "macro_language": "Python", "macro_location": "document", "macro_args": ["Revenue", "Marketing"]},
+    "description": "Run a Python macro for regression analysis"
+  },
+  {
+    "tool": "libreoffice_calc",
+    "params": {"operation": "list_macros"},
+    "description": "List Calc-available macros"
+  },
+  {
+    "tool": "libreoffice_agentic_workflow",
+    "params": {"goal": "Check soffice status and list fleet templates"},
+    "description": "Agentic: health check and template discovery"
+  },
+  {
+    "tool": "libreoffice_agentic_workflow",
+    "params": {"goal": "Convert C:/reports/weekly.md to PDF"},
+    "description": "Agentic: single file conversion"
+  },
+  {
+    "tool": "libreoffice_agentic_workflow",
+    "params": {"goal": "List all templates, then create a board pack from fleet-board-pack.odt with Q3 KPIs"},
+    "description": "Agentic: discover then merge a board pack"
+  },
+  {
+    "tool": "libreoffice_agentic_workflow",
+    "params": {"goal": "Combine all markdown files in C:/docs/reports/ into a single pack titled 'Monthly Reports'"},
+    "description": "Agentic: batch pack markdown files"
+  },
+  {
+    "tool": "libreoffice_agentic_workflow",
+    "params": {"goal": "Check the server status, discover the extension bridge tools, and generate a fleet report with today's date"},
+    "description": "Agentic: multi-step status + bridge + merge"
+  },
+  {
+    "tool": "libreoffice_agentic_workflow",
+    "params": {"goal": "Convert C:/data/sales.xlsx to CSV, then read back the converted file"},
+    "description": "Agentic: convert spreadsheet and verify"
+  },
+  {
+    "tool": "libreoffice_agentic_workflow",
+    "params": {"goal": "Create a weekly report titled 'Fleet Status June 23'. Set SUMMARY to 'All 42 servers operational, zero incidents this week' and BODY to a paragraph about the CI/CD pipeline passing all tests"},
+    "description": "Agentic: generate coworker weekly report with rich content"
+  },
+  {
+    "tool": "libreoffice_help",
+    "params": {},
+    "description": "Get general help — operation catalog and formats"
+  },
+  {
+    "tool": "libreoffice_help",
+    "params": {"topic": "convert"},
+    "description": "Get help on the convert operation"
+  },
+  {
+    "tool": "libreoffice_help",
+    "params": {"topic": "merge"},
+    "description": "Get help on template merge operation"
+  },
+  {
+    "tool": "libreoffice_help",
+    "params": {"topic": "coworker"},
+    "description": "Get help on coworker PDF flows"
+  },
+  {
+    "tool": "libreoffice_help",
+    "params": {"topic": "bridge"},
+    "description": "Get help on extension bridge operations"
+  },
+  {
+    "tool": "libreoffice_help",
+    "params": {"topic": "agentic"},
+    "description": "Get help on agentic workflow configuration"
+  },
+  {
+    "tool": "show_libreoffice_status_card",
+    "params": {},
+    "description": "Show Prefab status card with soffice and bridge health"
+  },
+  {
+    "tool": "show_templates_card",
+    "params": {},
+    "description": "Show Prefab gallery card of bundled ODT templates"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Dev/repos/email-mcp/README.md", "output_format": "pdf"},
+    "description": "Convert another fleet repo's README to PDF"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Dev/repos/mcp-central-docs/standards/WEBAPP_SOTA_STANDARDS.md", "output_format": "pdf"},
+    "description": "Convert a fleet standard document to PDF"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/template.dotx", "output_format": "docx"},
+    "description": "Convert a DOTX template to DOCX"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/data.tsv", "output_format": "ods"},
+    "description": "Convert TSV (tab-separated values) to ODS"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/old.doc", "output_format": "odt"},
+    "description": "Convert legacy .doc format to ODT"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/old.ppt", "output_format": "odp"},
+    "description": "Convert legacy .ppt format to ODP"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Documents/old.xls", "output_format": "ods"},
+    "description": "Convert legacy .xls format to ODS"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "merge", "template": "C:/Users/sandr/Documents/custom-template.odt", "placeholders": {"NAME": "Sandra Schipal", "ROLE": "Fleet Architect", "DATE": "2026-06-23"}},
+    "description": "Merge a custom ODT template with absolute path"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "merge", "template": "fleet-report.odt", "placeholders": {"TITLE": "Incident Report", "DATE": "2026-06-23", "SUMMARY": "Minor outage in calibre-mcp, resolved in 5 minutes.", "BODY": "**Root cause**: Port conflict with another service.\n\n**Resolution**: Reassigned ports and restarted.\n\n**Prevention**: Added to port collision monitoring."}, "output_format": "pdf", "output_stem": "incident-20260623"},
+    "description": "Generate an incident report from the fleet report template"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "merge", "template": "fleet-board-pack.odt", "placeholders": {"TITLE": "Q3 Planning Board Pack", "DATE": "2026-06-23", "KPI_TABLE": "| Metric | Q2 Actual | Q3 Target |\n|---|---|---|\n| Active Repos | 42 | 45 |\n| Test Coverage | 78% | 85% |\n| Cold-install Pass | 38/38 | 45/45 |", "NARRATIVE": "Q2 delivered the coworker PDF pipeline, NSIS smoke testing rollout to 8 repos, and FastMCP 3.3 migration across the fleet.", "ACTION_ITEMS": "- Add 3 new MCP servers (multimeter, function-generator, spectrum-analyzer)\n- Achieve 85% test coverage\n- Complete NSIS certification for all Tauri-wrapped repos"}, "output_stem": "q3-planning-board-pack"},
+    "description": "Generate detailed Q3 planning board pack with rich table content"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "batch_pack", "input_paths": ["C:/Dev/repos/mcp-central-docs/README.md", "C:/Dev/repos/mcp-central-docs/standards/AGENT_PROTOCOLS.md", "C:/Dev/repos/mcp-central-docs/standards/SOTA_REQUIREMENTS.md"], "pack_title": "Fleet Standards Compendium", "output_stem": "fleet-standards-compendium"},
+    "description": "Pack fleet standard docs into a combined reference PDF"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "batch_pack", "input_paths": ["C:/reports/weekly-1.md", "C:/reports/weekly-2.md", "C:/reports/weekly-3.md", "C:/reports/weekly-4.md"], "pack_title": "Monthly Report — June 2026", "output_stem": "monthly-june-2026", "output_format": "pdf"},
+    "description": "Combine four weekly reports into a monthly PDF"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "pdf_merge", "input_paths": ["C:/docs/title-page.pdf", "C:/docs/executive-summary.pdf", "C:/docs/main-report.pdf", "C:/docs/appendix-a.pdf", "C:/docs/appendix-b.pdf"], "output_stem": "full-annual-report"},
+    "description": "Merge five PDFs into a complete annual report"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "reveal_output"},
+    "description": "Open the output directory in Explorer"
+  },
+  {
+    "tool": "libreoffice",
+    "params": {"operation": "convert", "input_path": "C:/Users/sandr/Desktop/draft.md", "output_format": "pdf", "queue_job": true},
+    "description": "Queue a long-running conversion as a background job"
+  }
+]

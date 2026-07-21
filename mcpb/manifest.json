@@ -1,0 +1,60 @@
+{
+  "manifest_version": "0.2",
+  "name": "libreoffice-mcp",
+  "version": "0.3.0-alpha.1",
+  "description": "General-purpose LibreOffice MCP — Writer/Calc/Impress convert, merge, batch, PDF merge, folder watch, upload, agentic workflows",
+  "author": {
+    "name": "sandraschi"
+  },
+  "server": {
+    "type": "python",
+    "entry_point": "src/libreoffice_mcp/server.py",
+    "mcp_config": {
+      "command": "python",
+      "args": ["-m", "libreoffice_mcp.server", "--stdio"],
+      "env": {
+        "PYTHONPATH": "${PWD}/src",
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  },
+  "user_config": {
+    "LIBREOFFICE_MCP_SOFFICE_PATH": {
+      "type": "string",
+      "title": "soffice.exe path",
+      "description": "Absolute path to LibreOffice soffice.exe (Windows) or soffice binary",
+      "required": false,
+      "default": ""
+    },
+    "LIBREOFFICE_MCP_EXTENSION_BRIDGE_URL": {
+      "type": "string",
+      "title": "Extension MCP URL",
+      "description": "WriterAgent / mcp-libre bridge (default http://127.0.0.1:8765/mcp)",
+      "required": false,
+      "default": "http://127.0.0.1:8765/mcp"
+    },
+    "LIBREOFFICE_MCP_SAMPLING_BASE_URL": {
+      "type": "string",
+      "title": "Sampling LLM base URL",
+      "description": "OpenAI-compatible API for agentic workflow (e.g. Ollama http://127.0.0.1:11434/v1)",
+      "required": false,
+      "default": "http://127.0.0.1:11434/v1"
+    },
+    "LIBREOFFICE_MCP_SAMPLING_MODEL": {
+      "type": "string",
+      "title": "Sampling model",
+      "description": "Model name for server-side sampling",
+      "required": false,
+      "default": "qwen3.5:27b"
+    }
+  },
+  "tools": [
+    { "name": "libreoffice", "description": "Portmanteau: convert, merge, batch, pdf_merge, watch, status, bridge" },
+    { "name": "libreoffice_writer", "description": "Writer live: live_write, live_type, macros (.oxt bridge)" },
+    { "name": "libreoffice_calc", "description": "Calc live: type_cells, pivot demo, read_file (calc .oxt)" },
+    { "name": "libreoffice_agentic_workflow", "description": "Multi-step document goals via sampling (SEP-1577)" },
+    { "name": "libreoffice_help", "description": "Help index for operations and coworker flows" },
+    { "name": "show_libreoffice_status_card", "description": "Prefab status card (soffice + bridge)" },
+    { "name": "show_templates_card", "description": "Prefab card listing bundled ODT templates" }
+  ]
+}

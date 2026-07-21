@@ -1,4 +1,5 @@
-﻿set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
+set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
+import 'scripts/just/fleet.just'
 
 # Open interactive recipe dashboard (fleet standard)
 default:
@@ -99,6 +100,10 @@ build-native:
     $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
     .\build.ps1
 
+# Run CUA smoke test against installed NSIS app
+cua-nsis-test:
+    C:\Windows\py.exe scripts/cua-smoke.py
+
 build-native-debug:
     Set-Location "{{REPO}}/native"
     $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
@@ -114,4 +119,3 @@ tauri-dev:
     $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
     npm install
     npx @tauri-apps/cli dev
-

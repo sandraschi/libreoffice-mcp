@@ -11,6 +11,7 @@
     "windows": [
       {
         "title": "LibreOffice MCP",
+        "label": "main",
         "width": 1200,
         "height": 800,
         "minWidth": 800,
@@ -33,15 +34,17 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "externalBin": [
-      "binaries/libreoffice-mcp-backend"
+    "resources": [
+      "resources/libreoffice-mcp-backend.exe",
+            "resources/.env"
     ],
     "windows": {
       "webviewInstallMode": {
         "type": "skip"
       },
       "nsis": {
-        "installerHooks": "./windows/hooks.nsh"
+        "installMode": "currentUser",
+"installerHooks": "./windows/hooks.nsh"
       }
     }
   },
@@ -57,3 +60,5 @@
     }
   }
 }
+
+

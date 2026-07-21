@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { Health, Job } from '../lib/api'
+import type { Health, Job, ProviderInfo } from '../lib/api'
 
 export interface Toast {
   id: string
@@ -19,6 +19,10 @@ interface AppState {
   toasts: Toast[]
   addToast: (t: Omit<Toast, 'id'>) => void
   removeToast: (id: string) => void
+  providers: ProviderInfo[]
+  setProviders: (p: ProviderInfo[]) => void
+  gpuDetected: boolean
+  setGpuDetected: (d: boolean) => void
 }
 
 let _tid = 0
@@ -43,4 +47,8 @@ export const useStore = create<AppState>((set) => ({
   },
   removeToast: (id) =>
     set((s) => ({ toasts: s.toasts.filter((x) => x.id !== id) })),
+  providers: [],
+  setProviders: (providers) => set({ providers }),
+  gpuDetected: false,
+  setGpuDetected: (gpuDetected) => set({ gpuDetected }),
 }))
