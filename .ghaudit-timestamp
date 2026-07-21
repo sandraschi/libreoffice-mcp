@@ -1,0 +1,9 @@
+{
+  "medium": 3,
+  "last_release": "2026-06-02",
+  "low": 3,
+  "timestamp": "2026-07-22T22:00:00Z",
+  "high": 2,
+  "repo": "libreoffice-mcp",
+  "ci_pass": true
+}
