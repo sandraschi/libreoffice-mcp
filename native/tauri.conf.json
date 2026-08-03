@@ -36,7 +36,7 @@
     ],
     "resources": [
       "resources/libreoffice-mcp-backend.exe",
-            "resources/.env"
+            "resources/.env.example"
     ],
     "windows": {
       "webviewInstallMode": {
@@ -60,5 +60,6 @@
     }
   }
 }
+
 
 
