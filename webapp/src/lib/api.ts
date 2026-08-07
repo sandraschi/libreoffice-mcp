@@ -186,6 +186,28 @@ export type LogEntry = {
   message: string
 }
 
+export type StudioSession = {
+  soffice_available: boolean
+  soffice_path: string | null
+  writer_bridge_connected: boolean
+  calc_bridge_connected: boolean
+  output_dir: string
+  live_pages: {
+    studio: string
+    live_write: string
+    live_calc: string
+  }
+  recent_outputs: OutputFile[]
+}
+
+export type StudioOpenResult = {
+  success: boolean
+  message?: string
+  family?: string
+  path?: string | null
+  error?: string
+}
+
 /** Empty in dev (Vite proxy); direct backend URL in Tauri production build. */
 export const API_BASE = import.meta.env.DEV ? '' : 'http://127.0.0.1:10981'
 
@@ -415,4 +437,24 @@ export const api = {
       '/api/live/calc/pivot-demo',
       body,
     ),
+  studioSession: () =>
+    getJson<{ success: boolean; data: StudioSession }>('/api/studio/session').then(
+      (r) => r.data,
+    ),
+  studioOpenInApp: (body: {
+    family: 'writer' | 'calc' | 'impress' | 'draw'
+    path?: string
+  }) => postJson<StudioOpenResult>('/api/studio/open-in-app', body),
+  studioOutlineToSlides: (body: {
+    outline: string
+    title?: string
+    open_in_impress?: boolean
+  }) =>
+    postJson<{
+      success: boolean
+      title: string
+      slide_count: number
+      filename: string
+      output_path: string
+    }>('/api/studio/outline-to-slides', body),
 }

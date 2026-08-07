@@ -10,10 +10,10 @@ from .config import settings
 from .formats import document_info, suggested_formats
 from .headless import convert_batch, convert_file
 from .jobs import enqueue_convert
-from .spreadsheet_read import read_spreadsheet_data
 from .pack import pack_markdown_files
 from .pdf_ops import merge_pdfs
 from .reveal import reveal_path
+from .spreadsheet_read import read_spreadsheet_data
 from .storage import index_output
 from .templates import ensure_builtin_templates, list_templates, merge_and_convert
 from .watch_folder import start_watch, stop_watch, watch_status
@@ -117,7 +117,12 @@ async def execute_libreoffice_operation(
             output_format,
             output_stem=output_stem,
         )
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "batch_pack":
         if not input_paths:
@@ -130,7 +135,12 @@ async def execute_libreoffice_operation(
         )
         if result.get("success") and result.get("output"):
             index_output(Path(result["output"]), fmt=output_format)
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "pdf_merge":
         if not input_paths:
@@ -141,7 +151,12 @@ async def execute_libreoffice_operation(
         )
         if result.get("success") and result.get("output"):
             index_output(Path(result["output"]), fmt="pdf")
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "convert_batch":
         if not input_paths:
@@ -150,7 +165,12 @@ async def execute_libreoffice_operation(
         for item in result.get("results", []):
             if item.get("success") and item.get("output"):
                 index_output(Path(item["output"]), fmt=output_format)
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "convert":
         if not input_path:
@@ -164,7 +184,12 @@ async def execute_libreoffice_operation(
             index_output(Path(result["output"]), fmt=output_format, job_id=None)
         if not result.get("success") and not result.get("suggested_formats"):
             result["suggested_formats"] = suggested_formats(src)
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "watch_start":
         if not watch_path and not input_path:

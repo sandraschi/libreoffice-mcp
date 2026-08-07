@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Play, Radio, Table2 } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { StudioSessionBar } from '../components/StudioSessionBar'
 import { api, apiPath } from '../lib/api'
 import { useStore } from '../store'
 
@@ -86,6 +87,8 @@ export function LiveCalcPage() {
 
   return (
     <div className="max-w-3xl space-y-6">
+      <StudioSessionBar compact />
+
       <div className="flex items-center gap-3">
         <Table2 className="text-emerald-400 w-8 h-8" />
         <div>

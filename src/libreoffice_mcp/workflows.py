@@ -350,7 +350,13 @@ async def run_simple_action(action_id: str, params: dict[str, Any]) -> dict[str,
                 "data": {"job": job},
             }
         result = convert_file(src, fmt)
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "action_id": action_id, "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "action_id": action_id,
+            "data": result,
+        }
 
     if op == "merge":
         template = params.get("template")
@@ -385,7 +391,13 @@ async def run_simple_action(action_id: str, params: dict[str, Any]) -> dict[str,
         if not input_path:
             return {"success": False, "error": "input_path required"}
         info = document_info(Path(str(input_path)))
-        return {"success": info.get("success", False), "message": info.get("message", ""), "next_steps": info.get("next_steps", []), "action_id": action_id, "data": info}
+        return {
+            "success": info.get("success", False),
+            "message": info.get("message", ""),
+            "next_steps": info.get("next_steps", []),
+            "action_id": action_id,
+            "data": info,
+        }
 
     if op == "pdf_merge":
         raw = params.get("input_paths") or []
@@ -397,7 +409,13 @@ async def run_simple_action(action_id: str, params: dict[str, Any]) -> dict[str,
         result = merge_pdfs(
             [Path(p) for p in paths], output_stem=str(params.get("output_stem") or "merged")
         )
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "action_id": action_id, "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "action_id": action_id,
+            "data": result,
+        }
 
     delegated = await execute_libreoffice_operation(
         op,
@@ -521,7 +539,13 @@ async def run_workflow(workflow_id: str, params: dict[str, Any]) -> dict[str, An
         )
         fmt = str(params.get("output_format") or "pdf")
         result = convert_batch([Path(p) for p in paths], fmt)
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "workflow_id": workflow_id, "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "workflow_id": workflow_id,
+            "data": result,
+        }
 
     if op == "watch_start":
         watch_path = params.get("watch_path")
@@ -532,6 +556,12 @@ async def run_workflow(workflow_id: str, params: dict[str, Any]) -> dict[str, An
             glob_pattern=str(params.get("glob_pattern") or "*.*"),
             output_format=str(params.get("output_format") or "pdf"),
         )
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "workflow_id": workflow_id, "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "workflow_id": workflow_id,
+            "data": result,
+        }
 
     return {"success": False, "error": f"Unhandled workflow: {workflow_id}"}

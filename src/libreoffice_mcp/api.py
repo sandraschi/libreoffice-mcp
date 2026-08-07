@@ -106,8 +106,12 @@ class ChatMessage(BaseModel):
 
 class ChatRequest(BaseModel):
     message: str
-    system_prompt: str = Field(default="", description="System prompt composed from skill + personality")
-    history: list[ChatMessage] = Field(default_factory=list, description="Prior conversation messages")
+    system_prompt: str = Field(
+        default="", description="System prompt composed from skill + personality"
+    )
+    history: list[ChatMessage] = Field(
+        default_factory=list, description="Prior conversation messages"
+    )
     execute: bool = Field(default=True, description="Execute planned LibreOffice ops when true")
     params: dict[str, Any] = Field(default_factory=dict)
 
@@ -280,7 +284,14 @@ async def api_llm_discover() -> dict[str, Any]:
         except (httpx.HTTPError, OSError):
             pass
         providers.append(
-            {"id": name, "name": name, "base_url": base, "online": False, "models": [], "chat_endpoint": "ollama" if name == "ollama" else "openai"}
+            {
+                "id": name,
+                "name": name,
+                "base_url": base,
+                "online": False,
+                "models": [],
+                "chat_endpoint": "ollama" if name == "ollama" else "openai",
+            }
         )
 
     await probe("ollama", settings.ollama_base_url, "/api/tags")
@@ -292,9 +303,13 @@ def _detect_gpu() -> dict[str, Any]:
     """Probe for NVIDIA GPU via nvidia-smi."""
     try:
         import subprocess
+
         proc = subprocess.run(
             ["nvidia-smi", "--query-gpu=name,memory.total,driver_version", "--format=csv,noheader"],
-            capture_output=True, text=True, timeout=5, check=False,
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
         )
         if proc.returncode == 0 and proc.stdout.strip():
             lines = proc.stdout.strip().splitlines()
@@ -302,8 +317,18 @@ def _detect_gpu() -> dict[str, Any]:
             for line in lines[:4]:
                 parts = [p.strip() for p in line.split(",")]
                 if len(parts) >= 1:
-                    gpus.append({"name": parts[0], "memory": parts[1] if len(parts) > 1 else "", "driver": parts[2] if len(parts) > 2 else ""})
-            return {"detected": True, "count": len(gpus), "devices": gpus} if gpus else {"detected": False}
+                    gpus.append(
+                        {
+                            "name": parts[0],
+                            "memory": parts[1] if len(parts) > 1 else "",
+                            "driver": parts[2] if len(parts) > 2 else "",
+                        }
+                    )
+            return (
+                {"detected": True, "count": len(gpus), "devices": gpus}
+                if gpus
+                else {"detected": False}
+            )
     except Exception:
         pass
     return {"detected": False}
@@ -432,7 +457,11 @@ async def api_chat(body: ChatRequest) -> dict[str, Any]:
         for base_url, model, is_openai in attempts:
             if not base_url or not model:
                 continue
-            if is_openai and base_url == "https://api.openai.com/v1" and not settings.openai_api_key:
+            if (
+                is_openai
+                and base_url == "https://api.openai.com/v1"
+                and not settings.openai_api_key
+            ):
                 continue
             headers = {}
             if is_openai and settings.openai_api_key:
@@ -440,7 +469,9 @@ async def api_chat(body: ChatRequest) -> dict[str, Any]:
             try:
                 u = f"{base_url.rstrip('/')}/{'v1/chat/completions' if is_openai else 'api/chat'}"
                 async with httpx.AsyncClient(timeout=30.0) as client:
-                    r = await client.post(u, json={"model": model, "messages": msgs, "stream": False}, headers=headers)
+                    r = await client.post(
+                        u, json={"model": model, "messages": msgs, "stream": False}, headers=headers
+                    )
                     if r.is_success:
                         data = r.json()
                         content = ""
@@ -490,7 +521,9 @@ async def api_chat_stream(body: ChatRequest):
             try:
                 u = f"{base_url.rstrip('/')}/{'v1/chat/completions' if is_openai else 'api/chat'}"
                 async with httpx.AsyncClient(timeout=60.0) as client:
-                    async with client.stream("POST", u, json={"model": model, "messages": msgs, "stream": True}) as resp:
+                    async with client.stream(
+                        "POST", u, json={"model": model, "messages": msgs, "stream": True}
+                    ) as resp:
                         if not resp.is_success:
                             continue
                         async for line in resp.aiter_lines():
@@ -506,7 +539,10 @@ async def api_chat_stream(body: ChatRequest):
                                         delta = (data.get("choices") or [{}])[0].get("delta", {})
                                         content = delta.get("content", "")
                                         if content:
-                                            yield _json.dumps({"type": "delta", "content": content}) + "\n"
+                                            yield (
+                                                _json.dumps({"type": "delta", "content": content})
+                                                + "\n"
+                                            )
                                     except _json.JSONDecodeError:
                                         pass
                             else:
@@ -516,7 +552,10 @@ async def api_chat_stream(body: ChatRequest):
                                         break
                                     content = (data.get("message") or {}).get("content", "")
                                     if content:
-                                        yield _json.dumps({"type": "delta", "content": content}) + "\n"
+                                        yield (
+                                            _json.dumps({"type": "delta", "content": content})
+                                            + "\n"
+                                        )
                                 except _json.JSONDecodeError:
                                     pass
                         yield _json.dumps({"type": "done"}) + "\n"
@@ -539,28 +578,55 @@ async def api_tools() -> dict[str, Any]:
                 "kind": "portmanteau",
                 "description": "General LibreOffice automation — Writer/Calc/Impress convert, merge, batch, PDF, watch",
                 "operations": [
-                    {"name": "status", "description": "soffice path, version, extension bridge health"},
+                    {
+                        "name": "status",
+                        "description": "soffice path, version, extension bridge health",
+                    },
                     {"name": "help", "description": "Capability summary + REST routes"},
-                    {"name": "convert", "description": "Headless single-file convert (.md → HTML → PDF, etc.)"},
-                    {"name": "convert_batch", "description": "Convert many files to one output format"},
-                    {"name": "document_info", "description": "Detect Writer/Calc/Impress and suggested export formats"},
-                    {"name": "merge", "description": "ODT template {{PLACEHOLDER}} merge → pdf/odt/docx"},
+                    {
+                        "name": "convert",
+                        "description": "Headless single-file convert (.md → HTML → PDF, etc.)",
+                    },
+                    {
+                        "name": "convert_batch",
+                        "description": "Convert many files to one output format",
+                    },
+                    {
+                        "name": "document_info",
+                        "description": "Detect Writer/Calc/Impress and suggested export formats",
+                    },
+                    {
+                        "name": "merge",
+                        "description": "ODT template {{PLACEHOLDER}} merge → pdf/odt/docx",
+                    },
                     {"name": "list_templates", "description": "Bundled + custom ODT templates"},
                     {"name": "batch_pack", "description": "Multiple .md paths → single PDF pack"},
                     {"name": "pdf_merge", "description": "Combine multiple PDFs (pypdf)"},
-                    {"name": "watch_start", "description": "Poll folder and auto-convert new files"},
+                    {
+                        "name": "watch_start",
+                        "description": "Poll folder and auto-convert new files",
+                    },
                     {"name": "watch_stop", "description": "Stop folder watch"},
                     {"name": "watch_status", "description": "Active watch folders and last events"},
                     {"name": "reveal_output", "description": "Open output file in OS file manager"},
-                    {"name": "writer_session_status", "description": "Live Writer bridge macro connected?"},
+                    {
+                        "name": "writer_session_status",
+                        "description": "Live Writer bridge macro connected?",
+                    },
                     {"name": "launch_writer", "description": "Open LibreOffice Writer GUI"},
-                    {"name": "live_write", "description": "NL prompt → generate → typewriter in Writer"},
+                    {
+                        "name": "live_write",
+                        "description": "NL prompt → generate → typewriter in Writer",
+                    },
                     {"name": "live_type", "description": "Type given text live with pacing"},
                     {"name": "run_macro", "description": "Run Basic UNO macro via .oxt bridge"},
                     {"name": "run_python_macro", "description": "Run Python UNO macro via bridge"},
                     {"name": "list_macros", "description": "List document Basic macro modules"},
                     {"name": "bridge_discover", "description": "List tools on extension MCP :8765"},
-                    {"name": "bridge_call", "description": "Proxy call to extension (live Writer/Calc)"},
+                    {
+                        "name": "bridge_call",
+                        "description": "Proxy call to extension (live Writer/Calc)",
+                    },
                 ],
             },
             {

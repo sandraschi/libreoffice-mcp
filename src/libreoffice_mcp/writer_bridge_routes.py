@@ -88,7 +88,12 @@ async def api_live_write(body: LiveWriteRequest) -> dict[str, Any]:
         headless_fallback=body.headless_fallback,
         launch_writer=body.launch_writer,
     )
-    return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+    return {
+        "success": result.get("success", False),
+        "message": result.get("message", ""),
+        "next_steps": result.get("next_steps", []),
+        "data": result,
+    }
 
 
 @writer_router.post("/api/live/type")
@@ -100,7 +105,12 @@ async def api_live_type(body: LiveTypeRequest) -> dict[str, Any]:
         headless_fallback=body.headless_fallback,
         new_document=body.new_document,
     )
-    return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+    return {
+        "success": result.get("success", False),
+        "message": result.get("message", ""),
+        "next_steps": result.get("next_steps", []),
+        "data": result,
+    }
 
 
 @writer_router.post("/api/live/launch-writer")

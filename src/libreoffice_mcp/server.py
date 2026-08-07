@@ -100,7 +100,9 @@ async def libreoffice(
     typewriter_wpm: Annotated[
         float | None, Field(description="Typewriter speed (words per minute)")
     ] = None,
-    max_words: Annotated[int | None, Field(description="Max words for live_write generation")] = None,
+    max_words: Annotated[
+        int | None, Field(description="Max words for live_write generation")
+    ] = None,
     headless_fallback: Annotated[
         bool, Field(description="When live bridge offline, write ODT and open Writer")
     ] = True,
@@ -156,7 +158,9 @@ async def libreoffice(
 
 @mcp.tool(version="0.3.0")
 async def libreoffice_writer(
-    operation: Annotated[str, Field(description="Writer live op: status, live_write, live_type, …")],
+    operation: Annotated[
+        str, Field(description="Writer live op: status, live_write, live_type, …")
+    ],
     prompt: Annotated[str | None, Field(description="Prompt for live_write")] = None,
     live_text: Annotated[str | None, Field(description="Text for live_type / insert_text")] = None,
     text: Annotated[str | None, Field(description="insert_text body")] = None,
@@ -337,26 +341,31 @@ def libreoffice_capabilities_resource() -> str:
 
 
 def build_app() -> FastAPI:
-    from contextlib import asynccontextmanager
-
     from .logging_utils import setup_ui_logging
 
-    @asynccontextmanager
-    async def lifespan(app: FastAPI):
-        setup_ui_logging()
-        settings.ensure_dirs()
-        ensure_builtin_templates()
-        log = logging.getLogger(__name__)
-        log.info("libreoffice-mcp API starting on :%s", settings.port)
-        yield
-        log.info("libreoffice-mcp API shutdown")
+    _mcp_http = mcp.http_app(path="/", transport="http", stateless_http=True)
 
     app = FastAPI(
         title="libreoffice-mcp",
         version=__version__,
         description="Headless LibreOffice convert + extension bridge",
-        lifespan=lifespan,
+        lifespan=_mcp_http.lifespan,
     )
+
+    # Move original lifespan logic to startup/shutdown events
+    @app.on_event("startup")
+    async def _lo_startup():
+        setup_ui_logging()
+        settings.ensure_dirs()
+        ensure_builtin_templates()
+        log = logging.getLogger(__name__)
+        log.info("libreoffice-mcp API starting on :%s", settings.port)
+
+    @app.on_event("shutdown")
+    async def _lo_shutdown():
+        log = logging.getLogger(__name__)
+        log.info("libreoffice-mcp API shutdown")
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[
@@ -372,16 +381,19 @@ def build_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
-    app.mount("/mcp", mcp.http_app(path="/", transport="http", stateless_http=True))
+    app.mount("/mcp", _mcp_http)
     app.include_router(api_router, prefix="/api")
-    from .writer_bridge_routes import writer_router
+    from .studio_routes import studio_router
+
+    app.include_router(studio_router, prefix="/api")
     from .calc_bridge_routes import calc_router
+    from .writer_bridge_routes import writer_router
 
     app.include_router(writer_router)
     app.include_router(calc_router)
 
-    from .live_session import writer_session_connected
     from .calc_session import calc_session_connected
+    from .live_session import writer_session_connected
 
     @app.get("/health")
     async def health() -> dict[str, Any]:

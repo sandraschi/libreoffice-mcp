@@ -13,7 +13,7 @@ if (Test-Path "package-lock.json") {
     Write-Host "npm ci (from lockfile)..." -ForegroundColor Yellow
     npm ci --no-audit --no-fund --legacy-peer-deps
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "lockfile out of sync — npm install..." -ForegroundColor Yellow
+        Write-Host "lockfile out of sync - npm install..." -ForegroundColor Yellow
         npm install --no-audit --no-fund --legacy-peer-deps
     }
 } else {

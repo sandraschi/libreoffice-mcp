@@ -11,7 +11,6 @@ from .live_calc import live_pivot_demo, live_type_cells
 from .macro_ops import (
     MacroLanguage,
     MacroLocation,
-    build_macro_uri,
     macro_action_payload,
 )
 from .spreadsheet_read import read_spreadsheet_data
@@ -107,11 +106,21 @@ async def execute_libreoffice_calc_operation(
         if not grid:
             return {"success": False, "error": "cells or values required for live_type_grid"}
         result = await live_type_cells(grid, delay_sec=delay_sec, new_document=True)
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "live_pivot_demo":
         result = await live_pivot_demo(typewriter_seed=typewriter_seed)
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "set_cell":
         if row is None or col is None:
@@ -125,7 +134,12 @@ async def execute_libreoffice_calc_operation(
                 "sheet": sheet_name,
             }
         )
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "set_range":
         if not values:
@@ -139,7 +153,12 @@ async def execute_libreoffice_calc_operation(
                 "sheet": sheet_name,
             }
         )
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "type_cells":
         if not cells:
@@ -153,7 +172,12 @@ async def execute_libreoffice_calc_operation(
             },
             timeout=max(120.0, len(cells) * 0.15),
         )
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "get_range":
         result = await execute_calc_action(
@@ -166,15 +190,30 @@ async def execute_libreoffice_calc_operation(
                 "sheet": sheet_name,
             }
         )
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "sheet_info":
         result = await execute_calc_action({"action": "sheet_info", "sheet": sheet_name})
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "seed_demo":
         result = await execute_calc_action({"action": "seed_demo_data"})
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "create_pivot":
         result = await execute_calc_action(
@@ -190,13 +229,20 @@ async def execute_libreoffice_calc_operation(
             },
             timeout=60.0,
         )
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation in ("run_macro", "run_python_macro"):
         if not macro_uri and not macro_name:
             return {"success": False, "error": "macro_uri or macro_name required"}
-        lang: MacroLanguage = "Python" if operation == "run_python_macro" else cast(
-            MacroLanguage, macro_language or "Basic"
+        lang: MacroLanguage = (
+            "Python"
+            if operation == "run_python_macro"
+            else cast(MacroLanguage, macro_language or "Basic")
         )
         loc = cast(MacroLocation, macro_location or "application")
         try:
@@ -212,6 +258,11 @@ async def execute_libreoffice_calc_operation(
         except ValueError as exc:
             return {"success": False, "error": str(exc)}
         result = await execute_calc_action(action, timeout=60.0)
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     return {"success": False, "error": f"Unknown calc operation: {operation}"}

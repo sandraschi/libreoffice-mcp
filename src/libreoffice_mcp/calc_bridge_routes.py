@@ -10,10 +10,10 @@ from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
+from .calc_runtime import launch_calc_gui
 from .calc_session import (
     calc_session_connected,
     calc_session_status,
-    emit_calc_event,
     get_pending_calc_task,
     note_calc_heartbeat,
     recent_calc_events,
@@ -22,7 +22,6 @@ from .calc_session import (
     unsubscribe_calc_events,
 )
 from .live_calc import live_pivot_demo, live_type_cells
-from .calc_runtime import launch_calc_gui
 
 calc_router = APIRouter()
 
@@ -81,7 +80,12 @@ async def api_live_type_cells(body: LiveTypeCellsRequest) -> dict[str, Any]:
         delay_sec=body.delay_sec,
         new_document=body.new_document,
     )
-    return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+    return {
+        "success": result.get("success", False),
+        "message": result.get("message", ""),
+        "next_steps": result.get("next_steps", []),
+        "data": result,
+    }
 
 
 @calc_router.post("/api/live/calc/pivot-demo")
@@ -91,7 +95,12 @@ async def api_live_pivot_demo(body: LivePivotDemoRequest) -> dict[str, Any]:
         seed_first=body.seed_first,
         typewriter_seed=body.typewriter_seed,
     )
-    return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+    return {
+        "success": result.get("success", False),
+        "message": result.get("message", ""),
+        "next_steps": result.get("next_steps", []),
+        "data": result,
+    }
 
 
 @calc_router.post("/api/live/launch-calc")

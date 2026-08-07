@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Feather, Play, Radio } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { StudioSessionBar } from '../components/StudioSessionBar'
 import { api, apiPath } from '../lib/api'
 import { useStore } from '../store'
 
@@ -112,6 +113,8 @@ export function LiveWritePage() {
       animate={{ opacity: 1, y: 0 }}
       className="max-w-4xl space-y-6"
     >
+      <StudioSessionBar compact />
+
       <div>
         <h1 className="text-xl font-display text-ink-100 flex items-center gap-2">
           <Feather size={22} className="text-amber-400" />

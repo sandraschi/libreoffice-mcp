@@ -23,7 +23,9 @@ _EXTENSION_INSERT_TOOLS = (
 )
 
 
-async def _try_extension_insert(text: str, *, bridge_url: str | None = None) -> dict[str, Any] | None:
+async def _try_extension_insert(
+    text: str, *, bridge_url: str | None = None
+) -> dict[str, Any] | None:
     probe = await probe_extension_bridge(bridge_url)
     if not probe.get("online"):
         return None
@@ -93,7 +95,11 @@ def launch_writer_gui(*, document_path: Path | None = None) -> dict[str, Any]:
         cmd.append(str(document_path))
     try:
         subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        return {"success": True, "message": "Writer launched", "path": str(document_path) if document_path else None}
+        return {
+            "success": True,
+            "message": "Writer launched",
+            "path": str(document_path) if document_path else None,
+        }
     except OSError as exc:
         return {"success": False, "error": str(exc)}
 

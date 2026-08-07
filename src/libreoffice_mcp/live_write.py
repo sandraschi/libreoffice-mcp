@@ -83,7 +83,13 @@ async def live_type_text(
     new_document: bool = True,
 ) -> dict[str, Any]:
     """Type text into live Writer with visible pacing."""
-    await emit_live_event({"type": "start", "chars": len(text), "mode": "live" if writer_session_connected() else "pending"})
+    await emit_live_event(
+        {
+            "type": "start",
+            "chars": len(text),
+            "mode": "live" if writer_session_connected() else "pending",
+        }
+    )
 
     if new_document and prefer_session:
         await execute_writer_action(
@@ -93,7 +99,12 @@ async def live_type_text(
             timeout=25.0,
         )
 
-    await emit_live_event({"type": "waiting_bridge", "message": "Start macro: Tools → Macros → Run → writer_bridge_macro → Main"})
+    await emit_live_event(
+        {
+            "type": "waiting_bridge",
+            "message": "Start macro: Tools → Macros → Run → writer_bridge_macro → Main",
+        }
+    )
     for _ in range(35):
         if writer_session_connected():
             break
@@ -138,7 +149,9 @@ async def live_type_text(
     if headless_fallback:
         await emit_live_event({"type": "fallback", "reason": "bridge_offline"})
         fb = await headless_write_markdown(text, output_stem="live-write")
-        await emit_live_event({"type": "done", "mode": "headless_fallback", "output": fb.get("output")})
+        await emit_live_event(
+            {"type": "done", "mode": "headless_fallback", "output": fb.get("output")}
+        )
         return {**fb, "typed_chars": len(text), "text_preview": text[:200]}
 
     await emit_live_event({"type": "error", "message": "Writer bridge not connected"})

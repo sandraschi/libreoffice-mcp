@@ -1,8 +1,35 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { HelpCircle, X } from 'lucide-react'
+import { HelpCircle, Moon, Sun, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { type Toast, useStore } from '../../store'
 import { api } from '../../lib/api'
+
+// EXPERIMENTAL light mode (invert hack). Not fleet standard - see index.css.
+// Toggling `.dark` off the root flips the invert filter; persisted so the
+// choice survives reloads. Delete this + the CSS block to revert.
+const THEME_KEY = 'libreoffice-light-mode'
+
+function useExperimentalTheme() {
+  const [light, setLight] = useState(() => {
+    try {
+      return localStorage.getItem(THEME_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', !light)
+    try {
+      localStorage.setItem(THEME_KEY, light ? '1' : '0')
+    } catch {
+      // ignore storage errors
+    }
+  }, [light])
+
+  return { light, toggle: () => setLight((v) => !v) }
+}
 
 const TITLES: Record<string, string> = {
   '/': 'Dashboard',
@@ -61,6 +88,7 @@ export function Topbar() {
   const title = TITLES[location.pathname] ?? location.pathname
   const be = health?.ports?.backend
   const fe = health?.ports?.frontend
+  const { light, toggle } = useExperimentalTheme()
 
   return (
     <>
@@ -69,8 +97,17 @@ export function Topbar() {
           {title}
         </h1>
         <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={toggle}
+            className="text-ink-500 hover:text-amber-400 transition-colors"
+            title={light ? "Switch to dark (experimental light mode)" : "Switch to light (experimental, ugly)"}
+            aria-label="Toggle light mode (experimental)"
+          >
+            {light ? <Moon size={16} /> : <Sun size={16} />}
+          </button>
           <span className="text-xs font-mono text-ink-600">
-            {be && fe ? `:${be} / :${fe}` : '—'}
+            {be && fe ? `:${be} / :${fe}` : '-'}
           </span>
           <button
             type="button"

@@ -8,7 +8,13 @@ from typing import Any, Literal
 MacroLanguage = Literal["Basic", "Python"]
 MacroLocation = Literal["application", "document"]
 
-__all__ = ["MacroLanguage", "MacroLocation", "build_macro_uri", "macro_action_payload", "list_macros_action"]
+__all__ = [
+    "MacroLanguage",
+    "MacroLocation",
+    "build_macro_uri",
+    "macro_action_payload",
+    "list_macros_action",
+]
 
 
 def build_macro_uri(

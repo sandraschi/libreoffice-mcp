@@ -1,6 +1,8 @@
 import { ExternalLink, RefreshCw } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { StudioSessionBar } from '../components/StudioSessionBar'
 import { api, type OutputFile } from '../lib/api'
+import { familyForFile, rememberLoFamily } from '../lib/studioFamily'
 import { useStore } from '../store'
 
 export function Output() {
@@ -28,6 +30,8 @@ export function Output() {
 
   return (
     <div className="space-y-6">
+      <StudioSessionBar compact />
+
       <div className="flex items-center justify-between gap-4">
         <p className="text-xs font-mono text-ink-500 truncate flex-1">
           {outputDir || '—'}
@@ -79,6 +83,27 @@ export function Output() {
                         Preview
                       </button>
                     )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const family = familyForFile(f.name)
+                        rememberLoFamily(family)
+                        api
+                          .studioOpenInApp({ family, path: f.name })
+                          .then(() =>
+                            addToast({
+                              type: 'success',
+                              message: `Opened ${f.name} in ${family}`,
+                            }),
+                          )
+                          .catch((e) =>
+                            addToast({ type: 'error', message: e.message }),
+                          )
+                      }}
+                      className="text-amber-400 hover:text-amber-300 text-xs"
+                    >
+                      Open in LO
+                    </button>
                     <button
                       type="button"
                       onClick={() =>

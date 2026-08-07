@@ -79,7 +79,12 @@ async def execute_libreoffice_writer_operation(
             prefer_session=prefer_session,
             headless_fallback=headless_fallback,
         )
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "live_type":
         body = live_text or prompt or text
@@ -92,7 +97,12 @@ async def execute_libreoffice_writer_operation(
             prefer_session=prefer_session,
             headless_fallback=headless_fallback,
         )
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "insert_text":
         if not (text or live_text):
@@ -102,7 +112,12 @@ async def execute_libreoffice_writer_operation(
             prefer_session=prefer_session,
             headless_fallback=headless_fallback,
         )
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "new_document":
         result = await execute_writer_action(
@@ -110,7 +125,12 @@ async def execute_libreoffice_writer_operation(
             prefer_session=prefer_session,
             headless_fallback=False,
         )
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation == "list_macros":
         result = await execute_writer_action(
@@ -118,13 +138,20 @@ async def execute_libreoffice_writer_operation(
             prefer_session=True,
             headless_fallback=False,
         )
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     if operation in ("run_macro", "run_python_macro"):
         if not macro_uri and not macro_name:
             return {"success": False, "error": "macro_uri or macro_name required"}
-        lang: MacroLanguage = "Python" if operation == "run_python_macro" else cast(
-            MacroLanguage, macro_language or "Basic"
+        lang: MacroLanguage = (
+            "Python"
+            if operation == "run_python_macro"
+            else cast(MacroLanguage, macro_language or "Basic")
         )
         loc = cast(MacroLocation, macro_location or "application")
         try:
@@ -148,6 +175,11 @@ async def execute_libreoffice_writer_operation(
                 library=macro_library,
                 module=macro_module,
             )
-        return {"success": result.get("success", False), "message": result.get("message", ""), "next_steps": result.get("next_steps", []), "data": result}
+        return {
+            "success": result.get("success", False),
+            "message": result.get("message", ""),
+            "next_steps": result.get("next_steps", []),
+            "data": result,
+        }
 
     return {"success": False, "error": f"Unknown writer operation: {operation}"}

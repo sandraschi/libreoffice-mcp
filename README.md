@@ -2,7 +2,7 @@
 
 General-purpose LibreOffice automation for agents and humans — headless **Writer, Calc, and Impress** conversion, ODT template merge, PDF combine, folder watch, **live Writer typewriter**, and optional extension MCP.
 
-**Version 0.3.0** · [INSTALL.md](INSTALL.md) · [docs/FEATURES.md](docs/FEATURES.md) · [docs/LIVE_WRITER.md](docs/LIVE_WRITER.md) · [docs/EXTENSION_CALC_BRIDGE.md](docs/EXTENSION_CALC_BRIDGE.md) · [docs/COMPARISON-OTHER-LO-MCP.md](docs/COMPARISON-OTHER-LO-MCP.md)
+**Version 0.3.0** · [INSTALL.md](INSTALL.md) · [docs/LIVE_STUDIO_PLAN.md](docs/LIVE_STUDIO_PLAN.md) · [docs/FEATURES.md](docs/FEATURES.md) · [docs/LIVE_WRITER.md](docs/LIVE_WRITER.md) · [docs/EXTENSION_CALC_BRIDGE.md](docs/EXTENSION_CALC_BRIDGE.md) · [docs/COMPARISON-OTHER-LO-MCP.md](docs/COMPARISON-OTHER-LO-MCP.md)
 
 ## How it runs
 

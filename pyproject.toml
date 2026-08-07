@@ -20,7 +20,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "pytest-asyncio>=0.24", "ruff>=0.8", "pyinstaller>=6.0"]
+dev = ["pytest>=8", "pytest-asyncio>=0.24", "ruff>=0.16.0,<0.17", "pyinstaller>=6.0"]
 
 [project.scripts]
 libreoffice-mcp = "libreoffice_mcp.server:main"

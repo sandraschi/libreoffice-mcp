@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion'
-import { Bot, Send, Download, Trash2, Loader2 } from 'lucide-react'
+import { Bot, Send, Download, Trash2, Loader2, Volume2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { api, type ProviderInfo } from '../lib/api'
+import { speakText } from '../lib/speech'
 import { useStore } from '../store'
 
 const LS_KEY = 'libreoffice-mcp-chat-history'
@@ -183,7 +184,23 @@ export function Chat() {
         {messages.map((m) => (
           <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-[85%] px-4 py-2.5 rounded-xl text-sm whitespace-pre-wrap ${m.role === 'user' ? 'bg-amber-500/20 text-amber-100' : 'bg-ink-800 text-ink-200'}`}>
-              <div className="text-[10px] text-ink-500 mb-1 font-mono">{new Date(m.ts).toLocaleTimeString()}</div>
+              <div className="flex items-center gap-2 text-[10px] text-ink-500 mb-1 font-mono">
+                <span>{new Date(m.ts).toLocaleTimeString()}</span>
+                {m.role === 'assistant' && (
+                  <button
+                    type="button"
+                    title="Read aloud"
+                    className="text-ink-400 hover:text-amber-400"
+                    onClick={() =>
+                      speakText(m.content).catch((e) =>
+                        addToast({ type: 'error', message: e.message }),
+                      )
+                    }
+                  >
+                    <Volume2 size={12} />
+                  </button>
+                )}
+              </div>
               {m.content}
             </div>
           </div>

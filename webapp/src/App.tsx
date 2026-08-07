@@ -10,6 +10,7 @@ import { Dashboard } from './pages/Dashboard'
 import { Help } from './pages/Help'
 import { Jobs } from './pages/Jobs'
 import { LiveCalcPage } from './pages/LiveCalc'
+import { LiveStudioPage } from './pages/LiveStudio'
 import { LiveWritePage } from './pages/LiveWrite'
 import { Logs } from './pages/Logs'
 import { Output } from './pages/Output'
@@ -45,6 +46,7 @@ export default function App() {
               <Route path="/chat" element={<Chat />} />
               <Route path="/live-write" element={<LiveWritePage />} />
               <Route path="/live-calc" element={<LiveCalcPage />} />
+              <Route path="/studio" element={<LiveStudioPage />} />
               <Route path="/upload" element={<UploadPage />} />
               <Route path="/tests" element={<TestsPage />} />
               <Route path="/tools" element={<Tools />} />

@@ -1,4 +1,4 @@
-set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
+set windows-shell := ["powershell.exe", "-NoProfile", "-Command"]
 import 'scripts/just/fleet.just'
 
 # Open interactive recipe dashboard (fleet standard)
@@ -7,21 +7,21 @@ default:
 
 REPO := justfile_directory()
 
-# ── Install ───────────────────────────────────────────────────────────────────
+# --- Install ---
 
 install:
     Set-Location "{{REPO}}"
     uv sync --extra dev
-    pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/bootstrap-webapp.ps1
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/bootstrap-webapp.ps1
 
 sync:
     Set-Location "{{REPO}}"
     uv sync --extra dev
 
 bootstrap-web:
-    pwsh -NoProfile -ExecutionPolicy Bypass -File "{{REPO}}/scripts/bootstrap-webapp.ps1"
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "{{REPO}}/scripts/bootstrap-webapp.ps1"
 
-# ── Runtime ───────────────────────────────────────────────────────────────────
+# --- Runtime ---
 
 backend:
     Set-Location "{{REPO}}"
@@ -32,12 +32,12 @@ mcp:
     uv run libreoffice-mcp --stdio
 
 webapp:
-    pwsh -NoProfile -ExecutionPolicy Bypass -File "{{REPO}}/webapp/start.ps1"
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "{{REPO}}/webapp/start.ps1"
 
 start:
-    pwsh -NoProfile -ExecutionPolicy Bypass -File "{{REPO}}/webapp/start.ps1"
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "{{REPO}}/webapp/start.ps1"
 
-# ── Quality ───────────────────────────────────────────────────────────────────
+# --- Quality ---
 
 lint:
     Set-Location "{{REPO}}"
@@ -56,7 +56,7 @@ check:
     Set-Location "{{REPO}}"
     uv run python -c "import libreoffice_mcp.server; print('Import OK')"
 
-# ── Testing ───────────────────────────────────────────────────────────────────
+# --- Testing ---
 
 test:
     Set-Location "{{REPO}}"
@@ -67,21 +67,21 @@ test-api:
     uv run pytest tests/test_api.py -q
 
 e2e:
-    pwsh -NoProfile -ExecutionPolicy Bypass -File "{{REPO}}/scripts/bootstrap-webapp.ps1"
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "{{REPO}}/scripts/bootstrap-webapp.ps1"
     Set-Location "{{REPO}}/webapp"
     npm run test:e2e
 
 pack-oxt:
-    pwsh -NoLogo -File "{{REPO}}/scripts/pack-bridge-oxt.ps1"
+    powershell.exe -NoProfile -File "{{REPO}}/scripts/pack-bridge-oxt.ps1"
 
 pack-calc-oxt:
-    pwsh -NoLogo -File "{{REPO}}/scripts/pack-bridge-calc-oxt.ps1"
+    powershell.exe -NoProfile -File "{{REPO}}/scripts/pack-bridge-calc-oxt.ps1"
 
 install-oxt:
-    pwsh -NoLogo -File "{{REPO}}/scripts/install-bridge-oxt.ps1"
+    powershell.exe -NoProfile -File "{{REPO}}/scripts/install-bridge-oxt.ps1"
 
 install-calc-oxt:
-    pwsh -NoLogo -File "{{REPO}}/scripts/install-bridge-calc-oxt.ps1"
+    powershell.exe -NoProfile -File "{{REPO}}/scripts/install-bridge-calc-oxt.ps1"
 
 pack mcpb-pack:
     Set-Location "{{REPO}}"
@@ -89,7 +89,7 @@ pack mcpb-pack:
     npx --yes @anthropic-ai/mcpb pack "{{REPO}}" "{{REPO}}/dist/libreoffice-mcp-v0.3.0-alpha.1.mcpb"
     Write-Host "Bundle: {{REPO}}/dist/libreoffice-mcp-v0.3.0-alpha.1.mcpb"
 
-# ── Native (Tauri 2.0) ────────────────────────────────────────────────────────
+# --- Native  Tauri 2 ---
 
 build-webapp:
     Set-Location "{{REPO}}/webapp"
@@ -100,17 +100,13 @@ build-native:
     $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
     .\build.ps1
 
-# Run CUA smoke test against installed NSIS app
-cua-nsis-test:
-    C:\Windows\py.exe scripts/cua-smoke.py
-
 build-native-debug:
     Set-Location "{{REPO}}/native"
     $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
     npx @tauri-apps/cli build --debug
 
 tauri-sidecar:
-    pwsh -NoLogo -File "{{REPO}}/native/build-sidecar.ps1"
+    powershell.exe -NoProfile -File "{{REPO}}/native/build-sidecar.ps1"
 
 tauri-build: build-native
 
@@ -119,3 +115,9 @@ tauri-dev:
     $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
     npm install
     npx @tauri-apps/cli dev
+
+# Bootstrap: install dev deps + pre-commit hook
+bootstrap:
+    uv sync --group dev
+    uv run pre-commit install
+    Write-Host "Pre-commit hooks installed." -ForegroundColor Green
