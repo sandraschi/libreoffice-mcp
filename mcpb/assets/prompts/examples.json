@@ -91,7 +91,7 @@
   },
   {
     "tool": "libreoffice",
-    "params": {"operation": "convert", "input_path": "C:/Dev/repos/aiwatcher-mcp/README.md", "output_format": "pdf", "queue_job": true},
+    "params": {"operation": "convert", "input_path": "D:/Dev/repos/aiwatcher-mcp/README.md", "output_format": "pdf", "queue_job": true},
     "description": "Convert a README to PDF as a background job"
   },
   {
@@ -491,12 +491,12 @@
   },
   {
     "tool": "libreoffice",
-    "params": {"operation": "convert", "input_path": "C:/Dev/repos/email-mcp/README.md", "output_format": "pdf"},
+    "params": {"operation": "convert", "input_path": "D:/Dev/repos/email-mcp/README.md", "output_format": "pdf"},
     "description": "Convert another fleet repo's README to PDF"
   },
   {
     "tool": "libreoffice",
-    "params": {"operation": "convert", "input_path": "C:/Dev/repos/mcp-central-docs/standards/WEBAPP_SOTA_STANDARDS.md", "output_format": "pdf"},
+    "params": {"operation": "convert", "input_path": "D:/Dev/repos/mcp-central-docs/standards/WEBAPP_SOTA_STANDARDS.md", "output_format": "pdf"},
     "description": "Convert a fleet standard document to PDF"
   },
   {
@@ -541,7 +541,7 @@
   },
   {
     "tool": "libreoffice",
-    "params": {"operation": "batch_pack", "input_paths": ["C:/Dev/repos/mcp-central-docs/README.md", "C:/Dev/repos/mcp-central-docs/standards/AGENT_PROTOCOLS.md", "C:/Dev/repos/mcp-central-docs/standards/SOTA_REQUIREMENTS.md"], "pack_title": "Fleet Standards Compendium", "output_stem": "fleet-standards-compendium"},
+    "params": {"operation": "batch_pack", "input_paths": ["D:/Dev/repos/mcp-central-docs/README.md", "D:/Dev/repos/mcp-central-docs/standards/AGENT_PROTOCOLS.md", "D:/Dev/repos/mcp-central-docs/standards/SOTA_REQUIREMENTS.md"], "pack_title": "Fleet Standards Compendium", "output_stem": "fleet-standards-compendium"},
     "description": "Pack fleet standard docs into a combined reference PDF"
   },
   {
