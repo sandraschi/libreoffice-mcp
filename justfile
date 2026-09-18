@@ -40,17 +40,10 @@ start:
 # --- Quality ---
 
 lint:
-    Set-Location "{{REPO}}"
-    uv run ruff check src/ tests/
-    Set-Location "{{REPO}}/webapp"
-    npx @biomejs/biome ci src e2e
+    Set-Location "{{REPO}}"; uv run ruff check src/ tests/; Set-Location "{{REPO}}/webapp"; npx @biomejs/biome ci src e2e
 
 fix:
-    Set-Location "{{REPO}}"
-    uv run ruff check src/ tests/ --fix
-    uv run ruff format src/ tests/
-    Set-Location "{{REPO}}/webapp"
-    npx @biomejs/biome check --write src e2e
+    Set-Location "{{REPO}}"; uv run ruff check src/ tests/ --fix; uv run ruff format src/ tests/; Set-Location "{{REPO}}/webapp"; npx @biomejs/biome check --write src e2e
 
 check:
     Set-Location "{{REPO}}"
@@ -67,9 +60,7 @@ test-api:
     uv run pytest tests/test_api.py -q
 
 e2e:
-    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "{{REPO}}/scripts/bootstrap-webapp.ps1"
-    Set-Location "{{REPO}}/webapp"
-    npm run test:e2e
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "{{REPO}}/scripts/bootstrap-webapp.ps1"; Set-Location "{{REPO}}/webapp"; npm run test:e2e
 
 pack-oxt:
     powershell.exe -NoProfile -File "{{REPO}}/scripts/pack-bridge-oxt.ps1"
@@ -92,18 +83,13 @@ pack mcpb-pack:
 # --- Native  Tauri 2 ---
 
 build-webapp:
-    Set-Location "{{REPO}}/webapp"
-    npm run build
+    Set-Location "{{REPO}}/webapp"; npm run build
 
 build-native:
-    Set-Location "{{REPO}}/native"
-    $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
-    .\build.ps1
+    $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"; & "{{REPO}}/native/build.ps1"
 
 build-native-debug:
-    Set-Location "{{REPO}}/native"
-    $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
-    npx @tauri-apps/cli build --debug
+    Set-Location "{{REPO}}/native"; $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"; npx @tauri-apps/cli build --debug
 
 tauri-sidecar:
     powershell.exe -NoProfile -File "{{REPO}}/native/build-sidecar.ps1"
@@ -111,10 +97,7 @@ tauri-sidecar:
 tauri-build: build-native
 
 tauri-dev:
-    Set-Location "{{REPO}}/native"
-    $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"
-    npm install
-    npx @tauri-apps/cli dev
+    Set-Location "{{REPO}}/native"; $env:Path = "$env:USERPROFILE\.cargo\bin;$env:Path"; npm install; npx @tauri-apps/cli dev
 
 # Bootstrap: install dev deps + pre-commit hook
 bootstrap:
