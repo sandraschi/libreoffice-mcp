@@ -5,12 +5,12 @@
     BackendPort  = 10981
     FrontendPort = 10983
     HealthPath   = '/health'
-    WebRoot      = 'D:\Dev\repos\libreoffice-mcp\webapp'
+    WebRoot      = 'webapp'
     Backend = @{
-        Kind       = 'custom'
-        WorkDir    = 'D:\Dev\repos\libreoffice-mcp'
+        Kind       = 'module-serve'
+        Module     = 'libreoffice_mcp'
+        ServeArgs  = @('--http', '--port', '10981')
         SyncExtras = @('dev')
-        Command    = 'uv run libreoffice-mcp --http --port 10981'
     }
     Frontend = @{
         Kind           = 'vite-npm'
