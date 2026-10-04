@@ -361,13 +361,8 @@ export const api = {
     getJson<{ skill: SkillEntry }>(
       `/api/skills/${encodeURIComponent(id)}`,
     ).then((r) => r.skill),
-  chat: (body: ChatRequest) =>
-    postJson<ChatResponse>(
-      '/api/chat',
-      body,
-    ),
-  llmDiscover: () =>
-    getJson<LlmDiscover>('/api/llm/discover'),
+  chat: (body: ChatRequest) => postJson<ChatResponse>('/api/chat', body),
+  llmDiscover: () => getJson<LlmDiscover>('/api/llm/discover'),
   upload: async (file: File): Promise<UploadResult> => {
     const form = new FormData()
     form.append('file', file)
@@ -429,18 +424,15 @@ export const api = {
       '/api/live/launch-calc',
       {},
     ),
-  livePivotDemo: (body: {
-    typewriter_seed?: boolean
-    launch_calc?: boolean
-  }) =>
+  livePivotDemo: (body: { typewriter_seed?: boolean; launch_calc?: boolean }) =>
     postJson<{ success: boolean; data: Record<string, unknown> }>(
       '/api/live/calc/pivot-demo',
       body,
     ),
   studioSession: () =>
-    getJson<{ success: boolean; data: StudioSession }>('/api/studio/session').then(
-      (r) => r.data,
-    ),
+    getJson<{ success: boolean; data: StudioSession }>(
+      '/api/studio/session',
+    ).then((r) => r.data),
   studioOpenInApp: (body: {
     family: 'writer' | 'calc' | 'impress' | 'draw'
     path?: string

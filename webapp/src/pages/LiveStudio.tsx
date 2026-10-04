@@ -1,10 +1,5 @@
 import { motion } from 'framer-motion'
-import {
-  ExternalLink,
-  Feather,
-  MonitorPlay,
-  Table2,
-} from 'lucide-react'
+import { ExternalLink, Feather, MonitorPlay, Table2 } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { StudioSessionBar } from '../components/StudioSessionBar'
@@ -85,8 +80,8 @@ export function LiveStudioPage() {
           Live Studio
         </h1>
         <p className="text-sm text-ink-500 mt-1">
-          Bridge status, launch LibreOffice apps, and jump to live Writer or Calc
-          sessions
+          Bridge status, launch LibreOffice apps, and jump to live Writer or
+          Calc sessions
         </p>
       </div>
 
@@ -200,9 +195,7 @@ export function LiveStudioPage() {
                 <span className="truncate flex-1 min-w-0">{file.name}</span>
                 <button
                   type="button"
-                  onClick={() =>
-                    openInApp(familyForFile(file.name), file.name)
-                  }
+                  onClick={() => openInApp(familyForFile(file.name), file.name)}
                   className="text-xs text-amber-400 hover:underline shrink-0"
                 >
                   Open in LO

@@ -3,7 +3,6 @@ import { HelpCircle, Moon, Sun, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { type Toast, useStore } from '../../store'
-import { api } from '../../lib/api'
 
 // EXPERIMENTAL light mode (invert hack). Not fleet standard - see index.css.
 // Toggling `.dark` off the root flips the invert filter; persisted so the
@@ -101,7 +100,11 @@ export function Topbar() {
             type="button"
             onClick={toggle}
             className="text-ink-500 hover:text-amber-400 transition-colors"
-            title={light ? "Switch to dark (experimental light mode)" : "Switch to light (experimental, ugly)"}
+            title={
+              light
+                ? 'Switch to dark (experimental light mode)'
+                : 'Switch to light (experimental, ugly)'
+            }
             aria-label="Toggle light mode (experimental)"
           >
             {light ? <Moon size={16} /> : <Sun size={16} />}

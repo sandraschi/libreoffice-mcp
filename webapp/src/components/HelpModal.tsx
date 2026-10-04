@@ -36,7 +36,10 @@ export function HelpModal() {
               <p>
                 {help.title} v{help.version}
               </p>
-              <p>Backend :{help.ports?.backend ?? 10981} · Dashboard :{help.ports?.frontend ?? 10983} · Extension bridge :8765</p>
+              <p>
+                Backend :{help.ports?.backend ?? 10981} · Dashboard :
+                {help.ports?.frontend ?? 10983} · Extension bridge :8765
+              </p>
               <p className="font-mono text-xs text-ink-500">
                 {help.host.env.join(' · ')}
               </p>

@@ -50,7 +50,10 @@ export function StudioSessionBar({ compact = false }: Props) {
         </p>
       )}
       <StatusPill label="soffice" ok={!!session?.soffice_available} />
-      <StatusPill label="writer bridge" ok={!!session?.writer_bridge_connected} />
+      <StatusPill
+        label="writer bridge"
+        ok={!!session?.writer_bridge_connected}
+      />
       <StatusPill label="calc bridge" ok={!!session?.calc_bridge_connected} />
       <Link
         to="/studio"

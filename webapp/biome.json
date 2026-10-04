@@ -8,7 +8,6 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "preset": "recommended",
       "correctness": {
         "useExhaustiveDependencies": "off"
       },
@@ -20,5 +19,7 @@
       }
     }
   },
-  "javascript": { "formatter": { "quoteStyle": "single", "semicolons": "asNeeded" } }
+  "javascript": {
+    "formatter": { "quoteStyle": "single", "semicolons": "asNeeded" }
+  }
 }

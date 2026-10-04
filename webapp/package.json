@@ -8,12 +8,14 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview --port 10983 --host 127.0.0.1",
     "lint": "biome ci .",
+    "biome:ci": "biome ci src e2e",
     "fix": "biome check --write .",
     "check": "tsc -b --noEmit && biome ci .",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
+    "@tauri-apps/api": "^2.2.0",
     "framer-motion": "^11.0.0",
     "lucide-react": "^0.383.0",
     "react": "18.3.1",

@@ -51,7 +51,10 @@ export function LiveCalcPage() {
   async function launchCalc() {
     try {
       await api.launchCalc()
-      addToast({ type: 'success', message: 'Calc launched — install calc-bridge .oxt' })
+      addToast({
+        type: 'success',
+        message: 'Calc launched — install calc-bridge .oxt',
+      })
     } catch (err: unknown) {
       addToast({
         type: 'error',
@@ -140,9 +143,11 @@ export function LiveCalcPage() {
 
         <p className="text-xs text-ink-500">
           Install:{' '}
-          <code className="text-ink-300">dist/libreoffice-mcp-calc-bridge.oxt</code>
-          , restart Calc, run{' '}
-          <code className="text-ink-300">just webapp</code>. MCP:{' '}
+          <code className="text-ink-300">
+            dist/libreoffice-mcp-calc-bridge.oxt
+          </code>
+          , restart Calc, run <code className="text-ink-300">just webapp</code>.
+          MCP:{' '}
           <code className="text-ink-300">
             libreoffice_calc(operation=&apos;live_pivot_demo&apos;)
           </code>

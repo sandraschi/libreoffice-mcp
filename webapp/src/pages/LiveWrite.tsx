@@ -65,7 +65,10 @@ export function LiveWritePage() {
   async function launchWriter() {
     try {
       await api.launchWriter()
-      addToast({ type: 'success', message: 'Writer launched — run the bridge macro' })
+      addToast({
+        type: 'success',
+        message: 'Writer launched — run the bridge macro',
+      })
     } catch (err: unknown) {
       addToast({
         type: 'error',
@@ -142,8 +145,16 @@ export function LiveWritePage() {
           </span>
         </div>
         <ol className="text-xs text-ink-400 list-decimal list-inside space-y-1">
-          <li>Install <code className="text-ink-300">dist/libreoffice-mcp-bridge.oxt</code> (see EXTENSION_BRIDGE.md)</li>
-          <li>Start backend: <code className="text-ink-300">just webapp</code></li>
+          <li>
+            Install{' '}
+            <code className="text-ink-300">
+              dist/libreoffice-mcp-bridge.oxt
+            </code>{' '}
+            (see EXTENSION_BRIDGE.md)
+          </li>
+          <li>
+            Start backend: <code className="text-ink-300">just webapp</code>
+          </li>
           <li>
             <button
               type="button"
@@ -191,7 +202,9 @@ export function LiveWritePage() {
 
       <div className="grid md:grid-cols-2 gap-4">
         <div className="rounded-lg border border-ink-700 bg-ink-950 p-4 min-h-[200px]">
-          <h2 className="text-xs font-mono text-ink-500 mb-2">Typewriter stream</h2>
+          <h2 className="text-xs font-mono text-ink-500 mb-2">
+            Typewriter stream
+          </h2>
           <p className="text-sm text-ink-200 whitespace-pre-wrap font-serif leading-relaxed">
             {streamText || (
               <span className="text-ink-600 italic">
