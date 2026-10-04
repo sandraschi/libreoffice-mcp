@@ -1,4 +1,26 @@
 
+## [Unreleased] — 2026-10-04 (assfix)
+
+### Added
+- REST: `POST /api/shutdown` (orderly exit for service restarts), `GET /api/v1/diagnostics`
+- REST: `/api/llm/providers`, `/api/llm/models`, `/api/llm/onboarding`,
+  `/api/llm/chat` + `/api/llm/chat/stream` backend proxy aliases
+- CI: `.github/workflows/ci.yml` (fleet template: ruff, pyright, pytest, tsc, biome, e2e)
+- Session injection: `.cursorrules`, `.windsurfrules`, `.claude-plugin` + `hooks/`,
+  `.github/copilot-instructions.md`, `.opencode/skills/`, `.agents/skills/`, `CLAUDE.md`
+- Docs: `docs/ONBOARDING.md`; `llms-full.txt` route list synced
+- Tool surface: `annotations=` on all portmanteaus, `## Return Format` + `## Examples`
+- Tests: 6 new API tests (shutdown dry-run, diagnostics, llm aliases); coverage floor 45%
+
+### Fixed
+- CORS `allow_origin_regex` unconditional (was gated on `LIBREOFFICE_TAURI`)
+- Ruff: removed `S110`/`S112` footgun ignores, enabled `T20` print ban
+- Pyright: 16 pre-existing errors fixed (PrefabApp/Card kwargs were runtime bugs too)
+- Webapp: `@tauri-apps/api` dep, dead `@ts-expect-error`s, biome.json v2 schema,
+  unused imports/vars, CRLF normalization (`.gitattributes`)
+- `justfile`: joined split `Set-Location` recipes; `pack` delegates to `mcpb/pack.ps1`
+- `.gitignore`: fixed `reports/` typo, added `*.mcpb`/`*.bak*`, `uv.lock` now committed
+
 ## [Unreleased] — 2026-06-14
 
 ### Fixed
@@ -81,5 +103,3 @@ Initial release: headless LibreOffice automation for Fritz coworker PDF/ODT deli
 
 - 17 pytest tests (`tests/` incl. `test_api.py` REST coverage)
 - 9 Playwright e2e tests (`webapp/e2e/`) — dashboard navigation, templates, tools hub, REST
-
-

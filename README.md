@@ -76,4 +76,9 @@ Open **http://127.0.0.1:10983**. For **live write**: see [docs/LIVE_WRITER.md](d
 
 ## Repo bar
 
-`justfile` · pytest · Biome · Playwright e2e · MCPB · Tauri native · `.env.example`
+`justfile` · pytest (63 tests, coverage floor 45%) · pyright clean · Biome · Playwright e2e · MCPB · Tauri native · `.env.example`
+
+## Stack
+
+Backend: Python 3.12, FastMCP 3.x, FastAPI, uvicorn. Frontend: React 18, Vite 5,
+TailwindCSS 3, Lucide, Framer Motion, Zustand. Desktop: Tauri 2 + NSIS.
