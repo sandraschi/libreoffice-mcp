@@ -1,0 +1,160 @@
+# Standard CI — Windows-only lightweight (fleet 2026)
+# Copy verbatim to: {repo}/.github/workflows/ci.yml
+# Identical across fleet. No per-repo forks.
+#
+# Python dev extra MUST include: ruff>=0.16.0,<0.17, pytest, ty, pip-audit
+# pyproject.toml MUST have [tool.ruff.lint] select = [...] (Ruff 0.16 trap — see TRAPS 7b)
+# Frontend: webapp/ (canonical) first, then webapp/frontend/, legacy web_sota/,
+# web-sota/, web/, frontend/, ui/, web_app/ — detected at runtime by
+# package-lock.json (first match wins). Repos without a lock file skip the
+# frontend steps: run `npm install` in the web root and commit the lock.
+# Frontend package.json MUST have: "check" (tsc), "biome:ci"
+
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  check:
+    name: Lint & Test (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PowerShell 5.1 gate
+        # Fleet speaks 5.1 only (POWERSHELL_51_STANDARD.md). windows-latest
+        # ships powershell.exe, so `shell: powershell` IS the real 5.1 parser.
+        # Requires the vendored scripts/Test-Ps51Parse.ps1 (fleet sweep P2).
+        shell: powershell
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Test-Ps51Parse.ps1 -Path .
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Detect frontend directory
+        id: frontend
+        shell: pwsh
+        run: |
+          foreach ($d in @('webapp', 'webapp/frontend', 'web_sota', 'web-sota', 'web', 'frontend', 'ui', 'web_app')) {
+            if (Test-Path "$d/package-lock.json") {
+              "dir=$d" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8NoBOM
+              exit 0
+            }
+          }
+          "dir=" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8NoBOM
+
+      - name: Set up Node
+        if: steps.frontend.outputs.dir != ''
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: ${{ steps.frontend.outputs.dir }}/package-lock.json
+
+      - name: Install Python dependencies
+        run: uv sync --extra dev
+
+      - name: Verify Ruff 0.16 and explicit select
+        shell: pwsh
+        run: |
+          $versionLine = uv run ruff --version
+          if ($versionLine -notmatch '0\.16\.') {
+            throw "Fleet requires Ruff 0.16.x (got: $versionLine). Pin ruff>=0.16.0,<0.17 in dev deps."
+          }
+          $toml = Get-Content pyproject.toml -Raw
+          if ($toml -notmatch '(?ms)\[tool\.ruff\.lint\].*?\bselect\s*=') {
+            throw "pyproject.toml must define [tool.ruff.lint] select = [...]. Ruff 0.16 without explicit select enables ~413 rules (TRAPS 7b)."
+          }
+
+      - name: Ruff check
+        shell: pwsh
+        run: |
+          $paths = @('src')
+          if (Test-Path 'tests') { $paths += 'tests' }
+          uv run ruff check @paths
+
+      - name: Ruff format check
+        shell: pwsh
+        run: |
+          $paths = @('src')
+          if (Test-Path 'tests') { $paths += 'tests' }
+          uv run ruff format --check @paths
+
+      - name: Pyright typecheck
+        shell: pwsh
+        run: |
+          $paths = @('src')
+          if (Test-Path 'api') { $paths += 'api' }
+          uv run pyright @paths
+
+      - name: Pytest
+        if: hashFiles('tests/**') != ''
+        run: uv run python -m pytest tests/ -q --tb=short
+
+      - name: ty typecheck
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $toml = Get-Content pyproject.toml -Raw
+          if ($toml -notmatch '(?m)^\s*"?ty"?\s*[,\]]' -and $toml -notmatch 'ty>=') {
+            Write-Host "skip: ty not listed in dev dependencies yet"
+            exit 0
+          }
+          uv run ty check src
+
+      - name: pip-audit
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $toml = Get-Content pyproject.toml -Raw
+          if ($toml -notmatch 'pip-audit') {
+            Write-Host "skip: pip-audit not listed in dev dependencies yet"
+            exit 0
+          }
+          uv run pip-audit
+
+      - name: Install web dependencies
+        if: steps.frontend.outputs.dir != ''
+        run: npm ci
+        working-directory: ${{ steps.frontend.outputs.dir }}
+
+      - name: Typecheck
+        if: steps.frontend.outputs.dir != ''
+        run: npm run check
+        working-directory: ${{ steps.frontend.outputs.dir }}
+
+      - name: Biome check
+        if: steps.frontend.outputs.dir != ''
+        run: npm run biome:ci
+        working-directory: ${{ steps.frontend.outputs.dir }}
+
+      - name: Install Playwright
+        if: steps.frontend.outputs.dir != ''
+        shell: pwsh
+        working-directory: ${{ steps.frontend.outputs.dir }}
+        run: |
+          if ((Test-Path playwright.config.ts) -or (Test-Path playwright.config.js)) {
+            npx playwright install chromium
+          }
+
+      - name: Run Playwright e2e
+        if: steps.frontend.outputs.dir != ''
+        shell: pwsh
+        working-directory: ${{ steps.frontend.outputs.dir }}
+        run: |
+          if ((Test-Path playwright.config.ts) -or (Test-Path playwright.config.js)) {
+            npx playwright test
+          }
