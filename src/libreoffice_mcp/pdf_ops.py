@@ -18,7 +18,7 @@ def merge_pdfs(
     except ImportError:
         return {
             "success": False,
-            "error": "pypdf not installed — run uv sync",
+            "error": "pypdf not installed - run uv sync",
         }
 
     sources = [Path(p) for p in input_paths if Path(p).is_file()]

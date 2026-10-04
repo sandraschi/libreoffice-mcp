@@ -1,4 +1,4 @@
-"""MCP agentic workflow — ctx.sample() over LibreOffice operations (SEP-1577)."""
+"""MCP agentic workflow - ctx.sample() over LibreOffice operations (SEP-1577)."""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ async def libreoffice_agentic_workflow(
     ],
     ctx: Context,
 ) -> dict[str, Any]:
-    """LIBREOFFICE_AGENTIC_WORKFLOW — Plan and execute multi-step LibreOffice tasks via sampling.
+    """LIBREOFFICE_AGENTIC_WORKFLOW - Plan and execute multi-step LibreOffice tasks via sampling.
 
     Uses server-side Ollama (LIBREOFFICE_MCP_SAMPLING_*) or host sampling when configured.
     Wraps the libreoffice portmanteau operations as sampler tools.
@@ -89,12 +89,12 @@ async def libreoffice_agentic_workflow(
 
     system_prompt = (
         "You are a LibreOffice document automation agent. Tools:\n"
-        "- lo_status() — soffice path and extension bridge health\n"
-        "- lo_list_templates() — bundled ODT templates (fleet-report, fleet-board-pack, fleet-artifact-pack)\n"
-        "- lo_convert(input_path, output_format='pdf') — headless convert; .md renders to HTML first\n"
+        "- lo_status() - soffice path and extension bridge health\n"
+        "- lo_list_templates() - bundled ODT templates (fleet-report, fleet-board-pack, fleet-artifact-pack)\n"
+        "- lo_convert(input_path, output_format='pdf') - headless convert; .md renders to HTML first\n"
         "- lo_merge(template, placeholders_json='{\"TITLE\":\"...\"}', output_format='pdf', output_stem='')\n"
-        "- lo_batch_pack(input_paths_csv='path1,path2', pack_title='...') — combine markdown files\n"
-        "- lo_bridge_discover() — list extension MCP tools on :8765\n"
+        "- lo_batch_pack(input_paths_csv='path1,path2', pack_title='...') - combine markdown files\n"
+        "- lo_bridge_discover() - list extension MCP tools on :8765\n"
         "Coworker flows: weekly report → fleet-report.odt; board pack → fleet-board-pack.odt; "
         "artifact pack → fleet-artifact-pack.odt or batch markdown pack.\n"
         "Plan steps, call tools with absolute Windows paths when converting. Summarize outputs."

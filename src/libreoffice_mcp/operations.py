@@ -82,7 +82,7 @@ async def execute_libreoffice_operation(
         ensure_builtin_templates()
         return {
             "success": True,
-            "message": "LibreOffice MCP — Writer, Calc, Impress headless automation + extension bridge",
+            "message": "LibreOffice MCP - Writer, Calc, Impress headless automation + extension bridge",
             "operations": list(get_args(LibreOfficeOp)),
             "writer_formats": ["pdf", "docx", "odt", "html", "txt", "rtf"],
             "calc_formats": ["pdf", "xlsx", "ods", "csv", "html"],

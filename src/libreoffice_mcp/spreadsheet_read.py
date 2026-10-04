@@ -1,4 +1,4 @@
-"""Headless spreadsheet read — adapted from mcp-libre (see external/mcp-libre, MIT)."""
+"""Headless spreadsheet read - adapted from mcp-libre (see external/mcp-libre, MIT)."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Live typewriter writing — generate prose and insert into Writer session."""
+"""Live typewriter writing - generate prose and insert into Writer session."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 async def generate_prose(prompt: str, *, max_words: int = 400) -> str:
     """Generate short prose via Ollama (or return prompt echo when offline)."""
     system = (
-        "You are a creative writer. Write vivid, readable prose only — no titles, "
+        "You are a creative writer. Write vivid, readable prose only - no titles, "
         "no markdown headings, no meta commentary. Plain paragraphs."
     )
     full_prompt = f"{system}\n\nTopic: {prompt}\n\nWrite about {max_words} words or less."
@@ -43,7 +43,7 @@ async def generate_prose(prompt: str, *, max_words: int = 400) -> str:
         log.warning("Ollama generate failed (%s); using template fallback", exc)
 
     return _clean_prose(
-        f"{prompt.capitalize()} — a quiet morning, wings catching light between garden flowers. "
+        f"{prompt.capitalize()} - a quiet morning, wings catching light between garden flowers. "
         "Each butterfly traced its own path, pausing on petals as if reading secrets written in nectar. "
         "The air shimmered with color: orange monarchs, pale cabbage whites, a single blue morpho "
         "that vanished and returned like a thought half-remembered. "
