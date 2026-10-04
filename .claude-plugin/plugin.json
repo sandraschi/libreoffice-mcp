@@ -1,0 +1,6 @@
+{
+  "name": "libreoffice-mcp",
+  "version": "0.3.0",
+  "description": "Headless LibreOffice automation: convert, ODT merge, batch packs, live Writer/Calc.",
+  "hooks": "../hooks/hooks.json"
+}

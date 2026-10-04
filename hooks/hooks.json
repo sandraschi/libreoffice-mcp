@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "text",
+            "text": "## Session Context (LibreOffice MCP)\n\nHeadless LibreOffice automation: convert, ODT merge, batch packs, live Writer/Calc.\n\n**Before starting work:**\n1. Check server health: libreoffice(operation=\"status\")\n2. List templates for merge flows: libreoffice(operation=\"list_templates\")\n\n**At end of work, save deliverables:**\n- Export artifacts via convert/merge; reveal outputs with libreoffice(operation=\"reveal_output\")"
+          }
+        ]
+      }
+    ]
+  }
+}
