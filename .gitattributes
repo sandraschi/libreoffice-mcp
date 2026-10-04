@@ -1,0 +1,21 @@
+# Fleet LF normalization — webapp + scripts stay LF even on Windows checkouts.
+* text=auto eol=lf
+*.ps1 text eol=lf
+*.psm1 text eol=lf
+*.just text eol=lf
+justfile text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+# Binaries must not be normalized.
+*.png binary
+*.ico binary
+*.icns binary
+*.odt binary
+*.oxt binary
+*.pdf binary
+*.woff2 binary
