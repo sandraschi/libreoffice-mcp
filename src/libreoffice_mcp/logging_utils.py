@@ -19,7 +19,9 @@ class UIHandler(logging.Handler):
                     "level": record.levelname,
                     "name": record.name,
                     "message": self.format(record),
-                    "exc_info": self.formatException(record.exc_info) if record.exc_info else None,
+                    "exc_info": logging.Formatter().formatException(record.exc_info)
+                    if record.exc_info
+                    else None,
                 }
             )
         except Exception:

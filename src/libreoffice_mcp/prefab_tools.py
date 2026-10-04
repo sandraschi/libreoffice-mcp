@@ -30,14 +30,7 @@ def register_prefab_tools(mcp: FastMCP) -> None:
         summary = await health_summary()
         summary["soffice_version"] = settings.soffice_product_version()
         card = build_status_card(summary)
-        bridge = summary.get("extension_bridge") or {}
-        text = (
-            f"LibreOffice: {'ready' if summary.get('soffice_found') else 'missing'} "
-            f"({summary.get('soffice_path') or 'n/a'}). "
-            f"Bridge: {'online' if bridge.get('online') else 'offline'} "
-            f"({bridge.get('tool_count', 0)} tools)."
-        )
-        return PrefabApp(content=text, structured_content=card)
+        return PrefabApp(view=card, title="LibreOffice Status")
 
     @mcp.tool(app=True, annotations={"readOnlyHint": True, "destructiveHint": False})
     async def show_templates_card() -> PrefabApp:
@@ -45,8 +38,4 @@ def register_prefab_tools(mcp: FastMCP) -> None:
         ensure_builtin_templates()
         templates = list_templates()
         card = build_templates_card(templates)
-        names = ", ".join(t["name"] for t in templates)
-        return PrefabApp(
-            content=f"Bundled templates ({len(templates)}): {names}",
-            structured_content=card,
-        )
+        return PrefabApp(view=card, title="Fleet ODT Templates")

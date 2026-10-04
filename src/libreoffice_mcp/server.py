@@ -1,4 +1,4 @@
-"""LibreOffice MCP — FastMCP 3.3 server (headless + extension bridge + REST API)."""
+"""LibreOffice MCP - FastMCP 3.3 server (headless + extension bridge + REST API)."""
 
 from __future__ import annotations
 
@@ -18,8 +18,6 @@ from . import __version__
 from .api import router as api_router
 from .bridge import probe_extension_bridge
 from .config import settings
-
-_LIBREOFFICE_TAURI = os.environ.get("LIBREOFFICE_TAURI", "").lower() in ("1", "true", "yes")
 from .headless import find_soffice
 from .mcp_agentic import libreoffice_agentic_workflow
 from .operations import LibreOfficeOp, execute_libreoffice_operation
@@ -38,10 +36,10 @@ sampling_handler = LoSamplingHandler()
 
 _MCP_INSTRUCTIONS = """You are LibreOffice MCP (FastMCP 3.3): headless document automation for the fleet.
 
-CORE: Portmanteau `libreoffice(operation=...)` — convert, merge, batch_pack, status, bridge.
+CORE: Portmanteau `libreoffice(operation=...)` - convert, merge, batch_pack, status, bridge.
 AGENTIC: `libreoffice_agentic_workflow(goal, ctx)` for multi-step tasks via sampling (SEP-1577).
 PREFABS: `show_libreoffice_status_card`, `show_templates_card` for in-chat rich UI.
-SKILLS: skill://*/SKILL.md — libreoffice-expert, coworker-pdf.
+SKILLS: skill://*/SKILL.md - libreoffice-expert, coworker-pdf.
 COWORKER: fleet-report.odt, fleet-board-pack.odt, fleet-artifact-pack.odt → PDF for Fritz flows.
 
 Requires LibreOffice soffice on the host. Extension bridge optional on :8765/mcp."""
@@ -58,7 +56,7 @@ if SKILLS_ROOT.is_dir():
     mcp.add_provider(SkillsDirectoryProvider(roots=SKILLS_ROOT, reload=False))
 
 
-@mcp.tool(version="0.2.0")
+@mcp.tool(version="0.2.0", annotations={"readOnlyHint": False, "destructiveHint": False})
 async def libreoffice(
     operation: Annotated[LibreOfficeOp, Field(description="Operation to run")],
     input_path: Annotated[str | None, Field(description="Source file for convert")] = None,
@@ -116,7 +114,7 @@ async def libreoffice(
     macro_module: Annotated[str | None, Field(description="Basic module name")] = None,
     macro_args: Annotated[list[Any] | None, Field(description="Macro invoke arguments")] = None,
 ) -> dict[str, Any]:
-    """Portmanteau LibreOffice automation — headless + live Writer bridge + UNO macros.
+    """Portmanteau LibreOffice automation - headless + live Writer bridge + UNO macros.
 
     Install extension: dist/libreoffice-mcp-bridge.oxt (auto-starts on LO launch).
 
@@ -124,6 +122,17 @@ async def libreoffice(
     - status, convert, merge, batch_pack, pdf_merge, watch_*, live_write, live_type
     - run_macro, run_python_macro, list_macros (via .oxt bridge)
     - bridge_discover, bridge_call, help
+
+    ## Return Format
+    Returns a dict with `success` (bool), `data` (operation payload) on success,
+    or `error` (message) on failure. Convert ops add `message` (e.g. job queued).
+
+    ## Examples
+    - `libreoffice(operation="status")` - soffice path + bridge health
+    - `libreoffice(operation="convert", input_path="C:/docs/report.md",
+      output_format="pdf")` - headless convert to PDF
+    - `libreoffice(operation="merge", template="fleet-report.odt",
+      placeholders={"TITLE": "Weekly"})` - ODT template merge
     """
     return await execute_libreoffice_operation(
         operation,
@@ -156,7 +165,7 @@ async def libreoffice(
     )
 
 
-@mcp.tool(version="0.3.0")
+@mcp.tool(version="0.3.0", annotations={"readOnlyHint": False, "destructiveHint": False})
 async def libreoffice_writer(
     operation: Annotated[
         str, Field(description="Writer live op: status, live_write, live_type, …")
@@ -177,7 +186,16 @@ async def libreoffice_writer(
     macro_args: Annotated[list[Any] | None, Field(description="Macro args")] = None,
     document_path: Annotated[str | None, Field(description="Open existing document")] = None,
 ) -> dict[str, Any]:
-    """Live Writer portmanteau — typewriter, macros (libreoffice-mcp-bridge.oxt)."""
+    """Live Writer portmanteau - typewriter, macros (libreoffice-mcp-bridge.oxt).
+
+    ## Return Format
+    Returns a dict with `success` (bool) and `data` (session/task payload),
+    or `error` on failure.
+
+    ## Examples
+    - `libreoffice_writer(operation="status")` - live bridge session state
+    - `libreoffice_writer(operation="live_write", prompt="Draft a memo about Q3")`
+    """
     from .writer_ops import execute_libreoffice_writer_operation
 
     return await execute_libreoffice_writer_operation(
@@ -200,7 +218,7 @@ async def libreoffice_writer(
     )
 
 
-@mcp.tool(version="0.3.0")
+@mcp.tool(version="0.3.0", annotations={"readOnlyHint": False, "destructiveHint": False})
 async def libreoffice_calc(
     operation: Annotated[str, Field(description="Calc live op: live_pivot_demo, type_cells, …")],
     input_path: Annotated[str | None, Field(description="Path for read_file")] = None,
@@ -231,7 +249,16 @@ async def libreoffice_calc(
     macro_module: Annotated[str | None, Field(description="Basic module")] = None,
     macro_args: Annotated[list[Any] | None, Field(description="Macro args")] = None,
 ) -> dict[str, Any]:
-    """Live Calc portmanteau — cell typewriter + Data Pilot pivot (libreoffice-mcp-calc-bridge.oxt)."""
+    """Live Calc portmanteau - cell typewriter + Data Pilot pivot (libreoffice-mcp-calc-bridge.oxt).
+
+    ## Return Format
+    Returns a dict with `success` (bool) and `data` (session/task payload),
+    or `error` on failure.
+
+    ## Examples
+    - `libreoffice_calc(operation="live_pivot_demo")` - typewriter demo + pivot table
+    - `libreoffice_calc(operation="read_file", input_path="C:/data/sheet.xlsx")`
+    """
     from .calc_ops import execute_libreoffice_calc_operation
 
     return await execute_libreoffice_calc_operation(
@@ -266,7 +293,7 @@ async def libreoffice_calc(
     )
 
 
-@mcp.tool(version="0.2.0")
+@mcp.tool(version="0.2.0", annotations={"readOnlyHint": True, "destructiveHint": False})
 async def libreoffice_help(
     topic: Annotated[
         str | None,
@@ -296,19 +323,19 @@ register_prefab_tools(mcp)
 
 @mcp.prompt
 def libreoffice_quick_start() -> str:
-    """Setup LibreOffice MCP — soffice path, dashboard, first convert."""
+    """Setup LibreOffice MCP - soffice path, dashboard, first convert."""
     return """LibreOffice MCP quick start:
 
 1. Install LibreOffice 26.x; set LIBREOFFICE_MCP_SOFFICE_PATH if not auto-detected.
 2. Optional: WriterAgent / mcp-libre on http://127.0.0.1:8765/mcp for live editing.
-3. HTTP: uv run libreoffice-mcp --http --port 10981 — dashboard on :10983.
+3. HTTP: uv run libreoffice-mcp --http --port 10981 - dashboard on :10983.
 4. libreoffice(operation='status') then list_templates or convert a .md file to PDF.
 5. For agentic flows: run Ollama, set LIBREOFFICE_MCP_SAMPLING_BASE_URL=http://127.0.0.1:11434/v1."""
 
 
 @mcp.prompt
 def libreoffice_coworker_pdf() -> str:
-    """Coworker PDF deliverables — weekly report, board pack, artifact pack."""
+    """Coworker PDF deliverables - weekly report, board pack, artifact pack."""
     return """Coworker PDF workflow:
 
 - Weekly report: merge fleet-report.odt (TITLE, DATE, SUMMARY, BODY) → PDF
@@ -376,7 +403,7 @@ def build_app() -> FastAPI:
             "https://tauri.localhost",
             "tauri://localhost",
         ],
-        allow_origin_regex=r"https?://tauri\.localhost(:\d+)?" if _LIBREOFFICE_TAURI else None,
+        allow_origin_regex=r"https?://(tauri\.localhost|localhost|127\.0\.0\.1|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|100\.\d+\.\d+\.\d+)(:\d+)?",
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

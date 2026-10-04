@@ -57,8 +57,9 @@ async def call_extension_tool(
             result = await client.call_tool(tool, args)
             parts = []
             for block in result.content:
-                if hasattr(block, "text"):
-                    parts.append(block.text)
+                text = getattr(block, "text", None)
+                if isinstance(text, str):
+                    parts.append(text)
             return {
                 "success": not result.is_error,
                 "tool": tool,

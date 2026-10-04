@@ -5,6 +5,10 @@ from __future__ import annotations
 import json as _json
 import logging
 import mimetypes
+import os
+import platform
+import sys
+import threading
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Annotated, Any
@@ -38,6 +42,15 @@ from .workflows import catalog, run_simple_action, run_workflow
 router = APIRouter()
 log = logging.getLogger(__name__)
 _sampling = LoSamplingHandler()
+
+
+def _error_response(message: str, *, data: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Shared error payload with auto-logging (traceback captured by caller)."""
+    log.exception("libreoffice-mcp API error: %s", message)
+    body: dict[str, Any] = {"success": False, "message": message, "error": message}
+    if data:
+        body["data"] = data
+    return body
 
 
 class ConvertRequest(BaseModel):
@@ -153,7 +166,7 @@ def _safe_output_file(name: str) -> Path:
 
 @router.get("/capabilities")
 async def api_capabilities() -> dict[str, Any]:
-    """Mandatory feature flags — WEBAPP_STANDARDS §1.4."""
+    """Mandatory feature flags - WEBAPP_STANDARDS §1.4."""
     soffice = settings.resolve_soffice()
     bridge = await health_summary()
     return {
@@ -233,7 +246,7 @@ async def api_get_env() -> dict[str, Any]:
         "LIBREOFFICE_MCP_LMSTUDIO_BASE_URL": settings.lmstudio_base_url,
         "LIBREOFFICE_MCP_OPENAI_MODEL": settings.openai_model,
     }
-    merged = {**defaults, **env}
+    merged: dict[str, str | None] = {**defaults, **env}
     return redact_env(merged)
 
 
@@ -249,7 +262,7 @@ async def api_update_env(request: Request) -> dict[str, Any]:
     write_env_updates(updates)
     reload_settings()
     log.info("Settings saved to .env")
-    return {"ok": True, "message": "Settings saved — reload applied"}
+    return {"ok": True, "message": "Settings saved - reload applied"}
 
 
 @router.get("/llm/discover")
@@ -441,7 +454,7 @@ async def api_agentic(body: AgenticRequest) -> dict[str, Any]:
 
 @router.post("/chat")
 async def api_chat(body: ChatRequest) -> dict[str, Any]:
-    """Agentic chat — LLM-powered when system_prompt + provider available, else rule-based."""
+    """Agentic chat - LLM-powered when system_prompt + provider available, else rule-based."""
     if body.system_prompt:
         msgs: list[dict[str, str]] = [{"role": "system", "content": body.system_prompt}]
         for msg in body.history:
@@ -499,7 +512,7 @@ async def api_chat(body: ChatRequest) -> dict[str, Any]:
 
 @router.post("/chat/stream")
 async def api_chat_stream(body: ChatRequest):
-    """Streaming chat — NDJSON SSE response from the first available LLM provider."""
+    """Streaming chat - NDJSON SSE response from the first available LLM provider."""
     from fastapi.responses import StreamingResponse
 
     async def generate():
@@ -569,14 +582,14 @@ async def api_chat_stream(body: ChatRequest):
 
 @router.get("/tools")
 async def api_tools() -> dict[str, Any]:
-    """SOTA Tools Hub — libreoffice portmanteau surface."""
+    """SOTA Tools Hub - libreoffice portmanteau surface."""
     return {
         "success": True,
         "tools": [
             {
                 "name": "libreoffice",
                 "kind": "portmanteau",
-                "description": "General LibreOffice automation — Writer/Calc/Impress convert, merge, batch, PDF, watch",
+                "description": "General LibreOffice automation - Writer/Calc/Impress convert, merge, batch, PDF, watch",
                 "operations": [
                     {
                         "name": "status",
@@ -644,13 +657,13 @@ async def api_tools() -> dict[str, Any]:
             {
                 "name": "show_libreoffice_status_card",
                 "kind": "prefab",
-                "description": "Prefab card — soffice + bridge health",
+                "description": "Prefab card - soffice + bridge health",
                 "operations": [],
             },
             {
                 "name": "show_templates_card",
                 "kind": "prefab",
-                "description": "Prefab card — bundled ODT template gallery",
+                "description": "Prefab card - bundled ODT template gallery",
                 "operations": [],
             },
         ],
@@ -884,3 +897,155 @@ async def api_tests_run(include_soffice: bool = Query(default=True)) -> dict[str
 async def api_output_index() -> dict[str, Any]:
     files = list_indexed_outputs()
     return {"success": True, "output_dir": str(settings.output_dir), "files": files}
+
+
+class ShutdownRequest(BaseModel):
+    grace_ms: int = Field(
+        default=500, description="Delay before exit; <=0 dry-runs (no exit scheduled)"
+    )
+
+
+@router.post("/shutdown")
+async def api_shutdown(body: ShutdownRequest) -> dict[str, Any]:
+    """Orderly exit — the fleet launcher calls this before Restart-Service so
+    in-flight work can checkpoint. Responds 200 immediately, exits after grace_ms.
+
+    ## Return Format
+    `{"success": True, "message": ..., "grace_ms": N}` (or `dry_run: True`).
+
+    ## Examples
+    - `POST /api/shutdown {"grace_ms": 500}` - orderly exit for service restart
+    """
+    try:
+        if body.grace_ms <= 0:
+            return {
+                "success": True,
+                "message": "Shutdown dry-run - no exit scheduled",
+                "dry_run": True,
+                "grace_ms": body.grace_ms,
+            }
+        timer = threading.Timer(body.grace_ms / 1000.0, lambda: os._exit(0))
+        timer.daemon = True
+        timer.start()
+        log.info("Shutdown scheduled in %d ms via /api/shutdown", body.grace_ms)
+        return {
+            "success": True,
+            "message": f"Exiting in {body.grace_ms} ms",
+            "grace_ms": body.grace_ms,
+        }
+    except Exception as exc:
+        return _error_response(f"Shutdown failed: {exc}")
+
+
+@router.get("/v1/diagnostics")
+async def api_diagnostics() -> dict[str, Any]:
+    """Full diagnostics for CUA-NSIS smoke testing: tool list, system info, errors.
+
+    ## Return Format
+    `{"success": True, "data": {"tools": [...], "system": {...}, "server": {...}}}`.
+
+    ## Examples
+    - `GET /api/v1/diagnostics` - smoke-test probe of tool surface + host health
+    """
+    try:
+        from . import __version__ as pkg_version
+        from .bridge import health_summary
+
+        bridge = await health_summary()
+        return {
+            "success": True,
+            "data": {
+                "tools": sorted(_LIBREOFFICE_OPS),
+                "tool_count": len(_LIBREOFFICE_OPS),
+                "system": {
+                    "platform": platform.platform(),
+                    "python": sys.version.split()[0],
+                },
+                "server": {
+                    "version": pkg_version,
+                    "soffice_path": str(settings.soffice_path or ""),
+                    "output_dir": str(settings.output_dir),
+                    "templates_dir": str(settings.templates_dir),
+                    "ports": {"backend": settings.port, "frontend": 10983},
+                },
+                "bridge": bridge,
+            },
+        }
+    except Exception as exc:
+        return _error_response(f"Diagnostics failed: {exc}")
+
+
+@router.get("/llm/providers")
+async def api_llm_providers() -> dict[str, Any]:
+    """Provider registry (VI superset of /llm/discover): local detected flags +
+    cloud configured flags, never key bytes.
+
+    ## Return Format
+    `{"providers": [...], "gpu": {...}}` — same shape as /llm/discover.
+    """
+    try:
+        return await api_llm_discover()
+    except Exception as exc:
+        return _error_response(f"Provider discovery failed: {exc}")
+
+
+@router.get("/llm/models")
+async def api_llm_models() -> dict[str, Any]:
+    """Model list per provider: live when reachable, empty when offline.
+
+    ## Return Format
+    `{"success": True, "models": {"ollama": [...], "lmstudio": [...]}}`.
+    """
+    try:
+        discovered = await api_llm_discover()
+        models = {p["id"]: p.get("models", []) for p in discovered.get("providers", [])}
+        return {"success": True, "models": models}
+    except Exception as exc:
+        return _error_response(f"Model listing failed: {exc}")
+
+
+@router.get("/llm/onboarding")
+async def api_llm_onboarding() -> dict[str, Any]:
+    """Fresh-install starter facts + recommended path for the under-hero cue.
+
+    ## Return Format
+    `{"success": True, "facts": [...], "recommended": {...}}`.
+    """
+    try:
+        discovered = await api_llm_discover()
+        providers = discovered.get("providers", [])
+        online = [p["id"] for p in providers if p.get("online")]
+        gpu = discovered.get("gpu", {"detected": False})
+        facts = [
+            "Install LibreOffice 26.x so headless convert works.",
+            "Run Ollama (qwen3.5:27b) for local agentic workflows.",
+            "Optional: WriterAgent / mcp-libre on :8765 for live editing.",
+        ]
+        if online:
+            recommended = {"path": "agentic", "detail": f"Providers online: {', '.join(online)}"}
+        elif gpu.get("detected"):
+            recommended = {
+                "path": "install-llm",
+                "detail": "GPU detected but no LLM running - start Ollama.",
+            }
+        else:
+            recommended = {
+                "path": "manual",
+                "detail": "No LLM detected - convert/merge work without one.",
+            }
+        return {"success": True, "facts": facts, "recommended": recommended}
+    except Exception as exc:
+        return _error_response(f"Onboarding facts failed: {exc}")
+
+
+@router.post("/llm/chat")
+async def api_llm_chat(body: ChatRequest) -> dict[str, Any]:
+    """Backend chat proxy (VI §11) — same core as POST /api/chat. Keys never
+    leave the server; the Chat page must use this, never direct provider fetch."""
+    return await api_chat(body)
+
+
+@router.post("/llm/chat/stream")
+async def api_llm_chat_stream(body: ChatRequest):
+    """Streaming backend chat proxy (SSE) — same core as POST /api/chat/stream."""
+    return await api_chat_stream(body)
