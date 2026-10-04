@@ -1,4 +1,4 @@
-"""ODT template merge — placeholder substitution + optional convert."""
+"""ODT template merge - placeholder substitution + optional convert."""
 
 from __future__ import annotations
 
@@ -102,7 +102,7 @@ _MANIFEST_XML = """<?xml version="1.0" encoding="UTF-8"?>
 
 BUILTIN_TEMPLATES: dict[str, dict[str, Any]] = {
     "fleet-report.odt": {
-        "description": "Styled fleet report — TITLE, DATE, SUMMARY, BODY",
+        "description": "Styled fleet report - TITLE, DATE, SUMMARY, BODY",
         "placeholders": ["TITLE", "DATE", "SUMMARY", "BODY"],
         "content": f"""<?xml version="1.0" encoding="UTF-8"?>
 <office:document-content office:version="1.2" {_CONTENT_NS}>
@@ -120,7 +120,7 @@ BUILTIN_TEMPLATES: dict[str, dict[str, Any]] = {
 """,
     },
     "fleet-board-pack.odt": {
-        "description": "Board pack — TITLE, DATE, KPI_TABLE, NARRATIVE, ACTION_ITEMS",
+        "description": "Board pack - TITLE, DATE, KPI_TABLE, NARRATIVE, ACTION_ITEMS",
         "placeholders": ["TITLE", "DATE", "KPI_TABLE", "NARRATIVE", "ACTION_ITEMS"],
         "content": f"""<?xml version="1.0" encoding="UTF-8"?>
 <office:document-content office:version="1.2" {_CONTENT_NS}>
@@ -140,7 +140,7 @@ BUILTIN_TEMPLATES: dict[str, dict[str, Any]] = {
 """,
     },
     "fleet-artifact-pack.odt": {
-        "description": "Batch artifact pack — TITLE, DATE, FILE_COUNT, BODY",
+        "description": "Batch artifact pack - TITLE, DATE, FILE_COUNT, BODY",
         "placeholders": ["TITLE", "DATE", "FILE_COUNT", "BODY"],
         "content": f"""<?xml version="1.0" encoding="UTF-8"?>
 <office:document-content office:version="1.2" {_CONTENT_NS}>

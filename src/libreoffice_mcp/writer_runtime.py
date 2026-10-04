@@ -1,4 +1,4 @@
-"""Execute Writer actions — live bridge preferred, headless fallback."""
+"""Execute Writer actions - live bridge preferred, headless fallback."""
 
 from __future__ import annotations
 
@@ -124,7 +124,7 @@ async def headless_write_markdown(
             "session_used": False,
             "markdown": str(md_path),
             "output": str(out),
-            "message": "Live bridge offline — opened converted document in Writer.",
+            "message": "Live bridge offline - opened converted document in Writer.",
         }
     return {
         "success": bool(result.get("success")),

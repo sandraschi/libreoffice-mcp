@@ -57,7 +57,7 @@ async def execute_libreoffice_writer_operation(
     if operation == "help":
         return {
             "success": True,
-            "message": "libreoffice_writer — live Writer typewriter + macros",
+            "message": "libreoffice_writer - live Writer typewriter + macros",
             "operations": list(get_args(WriterOp)),
             "install": "dist/libreoffice-mcp-bridge.oxt",
         }

@@ -1,4 +1,4 @@
-"""LibreOffice webapp action catalog — simple ops and multi-step coworker workflows."""
+"""LibreOffice webapp action catalog - simple ops and multi-step coworker workflows."""
 
 from __future__ import annotations
 
@@ -28,7 +28,7 @@ SIMPLE_ACTIONS: list[dict[str, Any]] = [
     {
         "id": "live_write",
         "label": "Live write (typewriter)",
-        "description": "Generate prose and type it in live Writer — watch the agent write",
+        "description": "Generate prose and type it in live Writer - watch the agent write",
         "operation": "live_write",
         "params": [
             {
@@ -78,7 +78,7 @@ SIMPLE_ACTIONS: list[dict[str, Any]] = [
     {
         "id": "convert",
         "label": "Convert file",
-        "description": "Headless convert — markdown renders to HTML before PDF",
+        "description": "Headless convert - markdown renders to HTML before PDF",
         "operation": "convert",
         "params": [
             {"name": "input_path", "type": "path", "required": True, "label": "Source file"},
