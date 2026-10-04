@@ -3,8 +3,18 @@
   "description": "Fleet LibreOffice MCP — headless convert, ODT template merge, batch artifact packs, and extension MCP bridge. SOTA Vite dashboard on :10983.",
   "author": "sandraschi",
   "license": "MIT",
+  "version": "0.3.0",
   "homepage": "https://github.com/sandraschi/libreoffice-mcp",
   "repository": "https://github.com/sandraschi/libreoffice-mcp",
   "tags": ["libreoffice", "pdf", "convert", "odt", "documents", "mcp", "headless"],
-  "category": "productivity"
+  "category": "productivity",
+  "tools": [
+    {"name": "libreoffice", "description": "Portmanteau: convert, merge, batch, pdf_merge, watch, status, bridge"},
+    {"name": "libreoffice_writer", "description": "Writer live: live_write, live_type, macros (.oxt bridge)"},
+    {"name": "libreoffice_calc", "description": "Calc live: type_cells, pivot demo, read_file (calc .oxt)"},
+    {"name": "libreoffice_agentic_workflow", "description": "Multi-step document goals via sampling (SEP-1577)"},
+    {"name": "libreoffice_help", "description": "Help index for operations and coworker flows"},
+    {"name": "show_libreoffice_status_card", "description": "Prefab status card (soffice + bridge)"},
+    {"name": "show_templates_card", "description": "Prefab card listing bundled ODT templates"}
+  ]
 }

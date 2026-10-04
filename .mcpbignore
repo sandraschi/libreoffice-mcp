@@ -30,6 +30,12 @@ scripts/
 .coverage
 *.mcpb
 glama.json
+# Sneak-in specialist backups — never ship (see Batch Mutation Safety rule)
+*.bak
+*.bak.*
+*.bak-*
+*.orig
+*.rej
 .env
 .env.*
 uv.lock

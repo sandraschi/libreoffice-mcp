@@ -53,6 +53,13 @@ POST /api/merge
 POST /api/pack
 GET  /api/output
 GET  /api/output/file/{filename}
+POST /api/shutdown
+GET  /api/v1/diagnostics
+GET  /api/llm/providers
+GET  /api/llm/models
+GET  /api/llm/onboarding
+POST /api/llm/chat
+POST /api/llm/chat/stream
 GET  /api/skills
 GET  /api/skills/{id}
 GET  /api/actions
