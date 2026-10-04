@@ -20,7 +20,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "pytest-asyncio>=0.24", "ruff>=0.16.0,<0.17", "pyinstaller>=6.0"]
+dev = ["pytest>=8", "pytest-asyncio>=0.24", "pytest-cov>=6", "ruff>=0.16.0,<0.17", "pyinstaller>=6.0", "pre-commit>=4", "pyright>=1.1"]
 
 [project.scripts]
 libreoffice-mcp = "libreoffice_mcp.server:main"
@@ -38,9 +38,22 @@ target-version = "py312"
 src = ["src", "tests"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B"]
-ignore = ["E501"]
+select = ["E", "F", "I", "UP", "B", "T20"]
+ignore = ["S104", "S310", "S311", "S314", "S608", "S108", "S603", "S301", "S103", "S105", "S607", "S701", "S102", "S307", "S324", "ASYNC230", "B008", "B904", "B025", "B019", "B023", "C901", "UP035", "RUF006", "N806", "E501", "F841", "PLW1510", "BLE001", "RUF022", "E402", "F811", "B006", "B007", "RUF059", "RUF001", "RUF002", "RUF012", "DTZ005", "DTZ006", "DTZ001", "E741", "SIM115", "SIM102", "RUF100", "F401", "D103", "D101", "F821", "TRY002", "E501"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+addopts = ["--cov=libreoffice_mcp", "--cov-report=term-missing", "--cov-fail-under=45"]
+# Measured 50% on 2026-10-04 (63 tests). Floor, not aspiration — ratchet upward.
+
+[tool.coverage.run]
+source = ["src/libreoffice_mcp"]
+omit = ["*/tests/*", "*/test_*"]
+
+[dependency-groups]
+dev = [
+    "pillow>=12.3.0",
+    "pytesseract>=0.3.13",
+    "pywinauto>=0.6.9",
+]

@@ -4,11 +4,11 @@ LibreOffice-MCP sampling for FastMCP 3.3 (SEP-1577).
 Default: OpenAI-compatible local inference (Ollama at http://127.0.0.1:11434/v1).
 
 Env:
-  LIBREOFFICE_MCP_SAMPLING_BASE_URL — default http://127.0.0.1:11434/v1
-  LIBREOFFICE_MCP_SAMPLING_MODEL — default from settings / qwen3.5:27b
-  LIBREOFFICE_MCP_SAMPLING_API_KEY — optional Bearer token
-  LIBREOFFICE_MCP_SAMPLING_USE_OPENAI_KEY=1 — use OPENAI_API_KEY for cloud
-  LIBREOFFICE_MCP_SAMPLING_USE_CLIENT_LLM=1 — prefer MCP host sampling
+  LIBREOFFICE_MCP_SAMPLING_BASE_URL - default http://127.0.0.1:11434/v1
+  LIBREOFFICE_MCP_SAMPLING_MODEL - default from settings / qwen3.5:27b
+  LIBREOFFICE_MCP_SAMPLING_API_KEY - optional Bearer token
+  LIBREOFFICE_MCP_SAMPLING_USE_OPENAI_KEY=1 - use OPENAI_API_KEY for cloud
+  LIBREOFFICE_MCP_SAMPLING_USE_CLIENT_LLM=1 - prefer MCP host sampling
 """
 
 from __future__ import annotations
@@ -22,8 +22,8 @@ from urllib.parse import urlparse
 
 import httpx
 from mcp.shared.context import RequestContext
-from mcp.types import CreateMessageRequestParams as SamplingParams
 from mcp.types import (
+    AudioContent,
     CreateMessageResult,
     CreateMessageResultWithTools,
     ImageContent,
@@ -33,6 +33,7 @@ from mcp.types import (
     ToolResultContent,
     ToolUseContent,
 )
+from mcp.types import CreateMessageRequestParams as SamplingParams
 
 if TYPE_CHECKING:
     pass
@@ -223,7 +224,7 @@ def _degraded_text(last_user: str, has_tools: bool) -> str:
             "LIBREOFFICE_MCP_SAMPLING_USE_CLIENT_LLM=1 for host-side sampling."
         )
     )
-    return f"[LibreOffice-MCP sampling — HTTP LLM unreachable]\n\n{tool_note}\n\nGoal context: {last_user[:2000]!s}"
+    return f"[LibreOffice-MCP sampling - HTTP LLM unreachable]\n\n{tool_note}\n\nGoal context: {last_user[:2000]!s}"
 
 
 class LoSamplingHandler:
@@ -349,7 +350,9 @@ class LoSamplingHandler:
         content_text = msg.get("content") or ""
 
         if tool_calls:
-            blocks: list[TextContent | ToolUseContent] = []
+            blocks: list[
+                TextContent | ImageContent | AudioContent | ToolUseContent | ToolResultContent
+            ] = []
             if isinstance(content_text, str) and content_text.strip():
                 blocks.append(TextContent(type="text", text=content_text))
             for tc in tool_calls:

@@ -58,7 +58,7 @@ def run_self_tests(*, include_soffice: bool = True) -> dict[str, Any]:
         )
         if conv.get("output"):
             info = document_info(Path(conv["output"]))
-            record("document_info", info.get("success", False), str(info.get("family")))
+            record("document_info", bool(info.get("success", False)), str(info.get("family")))
 
     passed = sum(1 for r in results if r["ok"])
     return {

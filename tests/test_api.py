@@ -239,3 +239,58 @@ def test_api_chat_plan(client: TestClient):
     body = r.json()
     assert body["role"] == "assistant"
     assert "content" in body
+
+
+def test_api_shutdown_dry_run(client: TestClient):
+    # grace_ms<=0 must NOT schedule os._exit — safe to call in-suite.
+    r = client.post("/api/shutdown", json={"grace_ms": 0})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["success"] is True
+    assert body["dry_run"] is True
+
+
+def test_api_diagnostics(client: TestClient):
+    r = client.get("/api/v1/diagnostics")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["success"] is True
+    data = body["data"]
+    assert "convert" in data["tools"]
+    assert data["tool_count"] >= 14
+    assert "python" in data["system"]
+    assert data["server"]["ports"]["backend"] == 10981
+
+
+def test_api_llm_providers(client: TestClient):
+    r = client.get("/api/llm/providers")
+    assert r.status_code == 200
+    body = r.json()
+    assert "providers" in body
+    ids = {p["id"] for p in body["providers"]}
+    assert {"ollama", "lmstudio"} <= ids
+
+
+def test_api_llm_models(client: TestClient):
+    r = client.get("/api/llm/models")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["success"] is True
+    assert "ollama" in body["models"]
+
+
+def test_api_llm_onboarding(client: TestClient):
+    r = client.get("/api/llm/onboarding")
+    assert r.status_code == 200
+    body = r.json()
+    assert body["success"] is True
+    assert len(body["facts"]) >= 3
+    assert body["recommended"]["path"] in ("agentic", "install-llm", "manual")
+
+
+def test_api_llm_chat_alias(client: TestClient):
+    r = client.post(
+        "/api/llm/chat", json={"message": "convert report.pdf to docx", "execute": False}
+    )
+    assert r.status_code == 200
+    assert r.json()["role"] == "assistant"
