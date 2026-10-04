@@ -17,7 +17,7 @@ _INTENT_RULES: list[tuple[re.Pattern[str], dict[str, Any]]] = [
         {
             "kind": "action",
             "action_id": "live_write",
-            "reason": "Live Writer typewriter — watch it write in GUI",
+            "reason": "Live Writer typewriter - watch it write in GUI",
         },
     ),
     (
@@ -257,7 +257,7 @@ async def execute_plan(
 
 
 async def llm_enrich_plan(goal: str, plan: dict[str, Any]) -> dict[str, Any]:
-    """Optional Ollama pass to suggest params — best-effort, never required."""
+    """Optional Ollama pass to suggest params - best-effort, never required."""
     try:
         async with httpx.AsyncClient(timeout=8.0) as client:
             r = await client.post(

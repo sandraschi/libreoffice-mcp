@@ -1,4 +1,4 @@
-"""Fleet Apps Hub — read MCD webapp-registry.json."""
+"""Fleet Apps Hub - read MCD webapp-registry.json."""
 
 from __future__ import annotations
 
@@ -78,7 +78,7 @@ def discover_fleet_from_docs() -> list[FleetApp]:
             logger.error("fleet-registry read failed: %s", exc)
 
     if not apps:
-        logger.warning("No fleet apps from MCD — using fallback ports")
+        logger.warning("No fleet apps from MCD - using fallback ports")
         for port in (10983, 10997, 10946, 10763, 10757):
             apps[f"app-{port}"] = FleetApp(
                 id=f"app-{port}",

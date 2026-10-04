@@ -50,7 +50,7 @@ def convert_file(
         return {
             "success": False,
             "error": "LibreOffice soffice not found. Set LIBREOFFICE_MCP_SOFFICE_PATH.",
-            "hint": "Install LibreOffice — see INSTALL.md",
+            "hint": "Install LibreOffice - see INSTALL.md",
         }
 
     src = Path(input_path)

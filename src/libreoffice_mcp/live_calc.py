@@ -1,4 +1,4 @@
-"""Live Calc — cell typewriter and pivot demo in GUI."""
+"""Live Calc - cell typewriter and pivot demo in GUI."""
 
 from __future__ import annotations
 
@@ -105,5 +105,5 @@ async def live_pivot_demo(
         await emit_calc_event({"type": "pivot_done", "data": pivot.get("data")})
     return {
         **pivot,
-        "message": "Pivot table inserted in Calc — check the sheet below your data.",
+        "message": "Pivot table inserted in Calc - check the sheet below your data.",
     }

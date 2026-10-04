@@ -71,7 +71,7 @@ async def execute_libreoffice_calc_operation(
     if operation == "help":
         return {
             "success": True,
-            "message": "libreoffice_calc — live Calc bridge + headless spreadsheet read",
+            "message": "libreoffice_calc - live Calc bridge + headless spreadsheet read",
             "operations": list(get_args(CalcOp)),
             "install": "dist/libreoffice-mcp-calc-bridge.oxt + just webapp",
             "live_endpoints": [
