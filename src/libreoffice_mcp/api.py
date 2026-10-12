@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json as _json
 import logging
 import mimetypes
@@ -309,7 +310,7 @@ async def api_llm_discover() -> dict[str, Any]:
 
     await probe("ollama", settings.ollama_base_url, "/api/tags")
     await probe("lmstudio", settings.lmstudio_base_url, "/v1/models")
-    return {"providers": providers, "gpu": _detect_gpu()}
+    return {"providers": providers, "gpu": await asyncio.to_thread(_detect_gpu)}
 
 
 def _detect_gpu() -> dict[str, Any]:
@@ -787,7 +788,7 @@ async def api_output_file(filename: str) -> FileResponse:
 @router.post("/output/reveal/{filename}")
 async def api_output_reveal(filename: str) -> dict[str, Any]:
     path = _safe_output_file(filename)
-    result = reveal_path(path)
+    result = await asyncio.to_thread(reveal_path, path)
     if not result.get("success"):
         raise HTTPException(status_code=500, detail=result.get("error", "Reveal failed"))
     return result

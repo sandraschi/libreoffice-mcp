@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from pathlib import Path
 from typing import Any, Literal, get_args
 
@@ -179,7 +180,7 @@ async def execute_libreoffice_operation(
         if queue_job:
             job = enqueue_convert(src, output_format)
             return {"success": True, "data": {"job": job}, "message": "Convert job queued"}
-        result = convert_file(src, output_format)
+        result = await asyncio.to_thread(convert_file, src, output_format)
         if result.get("success") and result.get("output"):
             index_output(Path(result["output"]), fmt=output_format, job_id=None)
         if not result.get("success") and not result.get("suggested_formats"):
@@ -247,7 +248,7 @@ async def execute_libreoffice_operation(
     if operation == "read_spreadsheet":
         if not input_path:
             return {"success": False, "error": "input_path required for read_spreadsheet"}
-        data = read_spreadsheet_data(Path(input_path))
+        data = await asyncio.to_thread(read_spreadsheet_data, Path(input_path))
         return {"success": data.get("success", False), "data": data}
 
     if operation == "reveal_output":
@@ -257,7 +258,7 @@ async def execute_libreoffice_operation(
         p = Path(target)
         if not p.is_absolute():
             p = settings.output_dir / target
-        return reveal_path(p)
+        return await asyncio.to_thread(reveal_path, p)
 
     if operation == "bridge_discover":
         data = await probe_extension_bridge(bridge_url)

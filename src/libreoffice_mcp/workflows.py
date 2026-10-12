@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -349,7 +350,7 @@ async def run_simple_action(action_id: str, params: dict[str, Any]) -> dict[str,
                 "message": "Convert job queued",
                 "data": {"job": job},
             }
-        result = convert_file(src, fmt)
+        result = await asyncio.to_thread(convert_file, src, fmt)
         return {
             "success": result.get("success", False),
             "message": result.get("message", ""),

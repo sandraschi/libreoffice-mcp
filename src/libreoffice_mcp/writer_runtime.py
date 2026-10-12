@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import subprocess
 from pathlib import Path
@@ -114,7 +115,7 @@ async def headless_write_markdown(
     settings.ensure_dirs()
     md_path = settings.output_dir / f"{output_stem}.md"
     md_path.write_text(text, encoding="utf-8")
-    result = convert_file(md_path, output_format)
+    result = await asyncio.to_thread(convert_file, md_path, output_format)
     if result.get("success") and result.get("output"):
         out = Path(result["output"])
         launch_writer_gui(document_path=out)

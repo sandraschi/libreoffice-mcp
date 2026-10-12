@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from pathlib import Path
 from typing import Any, Literal, cast, get_args
 
@@ -89,7 +90,8 @@ async def execute_libreoffice_calc_operation(
     if operation == "read_file":
         if not input_path:
             return {"success": False, "error": "input_path required for read_file"}
-        data = read_spreadsheet_data(
+        data = await asyncio.to_thread(
+            read_spreadsheet_data,
             Path(input_path),
             sheet_name=sheet_name,
             max_rows=max_rows,
